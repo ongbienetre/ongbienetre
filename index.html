@@ -1,0 +1,1461 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ONG Bien-être — Votre bien-être, notre priorité</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    :root{
+      --green:#28a745;
+      --blue:#004aad;
+      --muted:#6c757d;
+      --max-width:1100px;
+      --cta-gradient: linear-gradient(90deg,var(--green),var(--blue));
+      --social-size: 22px;
+    }
+    html { scroll-behavior: smooth; }
+    body{
+      font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:#222;
+      background:#fff;
+    }
+
+    .navbar { background: #ffffffcc; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+    .navbar-brand { gap: .5rem; align-items: center; display:flex; }
+    .brand-logo{ height: clamp(100px, 8vw, 200px); width: auto; margin-right: 10px; display: block; object-fit: contain; }
+    @media (max-width:420px){ .brand-logo{ height: clamp(32px, 10vw, 60px); margin-right:8px; } }
+
+    .section{ padding: 60px 0; }
+    .hero { position: relative; height: 100vh; display: flex; align-items: center; justify-content: center; color: #fff; text-align: center; overflow: hidden; }
+    .hero .carousel { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; }
+    .hero .carousel-item img { width: 100%; height: 100%; object-fit: cover; }
+    .hero .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35)); z-index: 1; }
+    .hero .container { position: relative; z-index: 2; }
+    .hero .title { font-size: clamp(2rem, 3.8vw, 3rem); font-weight:700; color:#fff; text-shadow: 0 2px 16px rgba(0,0,0,0.35); }
+    .hero .lead { color:#f3f6f9; text-shadow: 0 1px 10px rgba(0,0,0,0.3); }
+    .btn-primary { background: var(--cta-gradient); border: none; box-shadow: 0 6px 18px rgba(0,74,173,0.18); }
+    .btn-outline-light { border-color: #fff; color:#fff; }
+
+    .scroll-cue { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 3; color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; opacity: .95; }
+    .scroll-cue .arrow { width: 24px; height: 24px; border-left: 2px solid #fff; border-bottom: 2px solid #fff; transform: rotate(-45deg); animation: bounce 1.8s infinite; }
+    .scroll-cue span { font-size: .9rem; }
+    @keyframes bounce { 0%,100%{ transform: translateY(0) rotate(-45deg);} 50%{ transform: translateY(8px) rotate(-45deg);} }
+
+    .card-feature { border:0; border-radius:12px; box-shadow:0 6px 20px rgba(18,38,63,0.06); transform: translateY(20px); opacity:0; transition: all .6s ease; }
+    .card-feature.revealed { transform:none; opacity:1; }
+    .partners img{ max-height:48px; opacity:.9; }
+    .testimonial { background: linear-gradient(90deg,#f8fafc,#ffffff); border-radius:12px; padding:20px; box-shadow:0 8px 30px rgba(12,32,54,0.04); }
+    footer{ background:#f8f9fb; padding:28px 0; font-size:.94rem; color:var(--muted); }
+
+    .social-follow { display:flex; align-items:center; gap:12px; }
+    .social-follow .label { font-weight:600; color:var(--muted); margin-right:6px; }
+    .social-icons a { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:8px; background:transparent; text-decoration:none; color:inherit; transition:transform .15s ease; }
+    .social-icons a:hover { transform:translateY(-4px); }
+    .social-icons svg { width: var(--social-size); height: var(--social-size); display:block; }
+
+    .whatsapp-float { position: fixed; right:18px; bottom:18px; z-index:1200; }
+    .whatsapp-float .btn { border-radius:50%; width:56px; height:56px; display:flex; align-items:center; justify-content:center; background: #25D366; color:#fff; box-shadow:0 8px 24px rgba(37,211,102,0.18); border:none; }
+
+    @media (max-width:768px){ .hero{height:90vh} .scroll-cue span{display:none} }
+
+    /* Moved from inline attributes to a reusable class */
+    .max-width-container {
+      max-width: var(--max-width);
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+    .about-img {
+      max-height: 320px;
+      object-fit: cover;
+    }
+    .testimonial-img {
+      width: 48px;
+      height: 48px;
+      object-fit: cover;
+    }
+    .d-none {
+      display: none !important;
+    }
+    #formAlert {
+      display: none;
+    }
+
+.icône {
+  position: absolute;
+  bottom: -5700px;      /* distance depuis le bas */
+  right: 0px;
+  width: 500px;
+  height: 800px;
+  background: url("images/icône.png") no-repeat bottom left;
+  background-size: contain;
+  opacity: 100;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 768px) {
+  
+  .icône {
+    width: 180px;
+    height: 90px;
+    opacity: 100;
+    bottom: -9600px;
+    z-index: 0;
+  }
+}
+
+.ticker-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #ffffff;
+  color: #000000;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  overflow: hidden;
+  z-index: 999;
+  border-top: 1px solid #444;
+}
+
+.ticker {
+  width: 100%;
+  overflow: hidden;
+}
+
+.ticker-content {
+  display: inline-block;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: ticker-scroll 50s linear infinite;
+}
+
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg sticky-top shadow-sm">
+  <div class="container max-width-container">
+    <a class="navbar-brand d-flex align-items-center" href="#home">
+      <img src="images/logo.png" alt="ONG Bien‑être" class="brand-logo">
+      <span class="fw-bold">ONG Bien‑être</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu" aria-label="Ouvrir le menu de navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navmenu">
+      <ul class="navbar-nav ms-auto align-items-lg-center">
+        <li class="nav-item"><a class="nav-link" href="#home" data-i18="nav.home">Accueil</a></li>
+        <li class="nav-item"><a class="nav-link" href="#about" data-i18="nav.about">À propos</a></li>
+        <li class="nav-item"><a class="nav-link" href="#actions" data-i18="nav.actions">Nos actions</a></li>
+        <li class="nav-item"><a class="nav-link" href="#partners" data-i18="nav.partners">Partenaires</a></li>
+        <li class="nav-item"><a class="nav-link" href="#testimonials" data-i18="nav.testimonials">Témoignages</a></li>
+        <li class="nav-item"><a class="nav-link" href="#vision" data-i18="nav.vision">Vision 2030</a></li>
+        <li class="nav-item"><a class="nav-link" href="#blog" data-i18="nav.blog">Blog</a></li>
+        <li class="nav-item"><a class="nav-link" href="#donate" data-i18="nav.donate">Faire un don</a></li>
+        <li class="nav-item"><a class="nav-link" href="#reinsertion" data-i18="nav.reinsertion">Réinsertion</a></li>
+        <li class="nav-item"><a class="nav-link" href="#contact" data-i18="nav.contact">Contact</a></li>
+        <li class="nav-item ms-2">
+          <div class="btn-group" role="group" aria-label="Language selector">
+            <button class="btn btn-sm btn-outline-secondary language-btn" data-lang="fr">FR</button>
+            <button class="btn btn-sm btn-outline-secondary language-btn" data-lang="en">EN</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO with full background carousel -->
+<header id="home" class="hero">
+  <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+    <div class="carousel-inner">
+      <div class="carousel-item active"><img src="images/community1.jpg" alt="Communauté 1" loading="lazy"></div>
+      <div class="carousel-item"><img src="images/community2.jpg" alt="Communauté 2" loading="lazy"></div>
+      <div class="carousel-item"><img src="images/community3.jpg" alt="Communauté 3" loading="lazy"></div>
+      <div class="carousel-item"><img src="images/community4.jpg" alt="Communauté 4" loading="lazy"></div>
+      <div class="carousel-item"><img src="images/community5.jpg" alt="Communauté 5" loading="lazy"></div>
+    </div>
+  </div>
+
+  <div class="hero-overlay"></div>
+
+  <div class="container">
+    <h1 class="title" data-i18="hero.title">ONG Bien‑être — Votre bien-être, notre priorité</h1>
+    <p class="lead mb-4" data-i18="hero.subtitle">Nous œuvrons pour la réinsertion, la prévention et l’accès aux soins. Agissons ensemble pour le bien-être de nos communautés.</p>
+    <div class="d-flex justify-content-center gap-2">
+      <a class="btn btn-primary btn-lg" href="#actions" data-i18="hero.cta1">Découvrir nos actions</a>
+      <a class="btn btn-outline-light btn-lg" href="#contact" data-i18="hero.cta2">Nous contacter</a>
+    </div>
+  </div>
+
+  <a href="#actions" class="scroll-cue" aria-label="Faire défiler vers Nos actions">
+    <span data-i18="hero.scroll">Faire défiler</span>
+    <div class="arrow" aria-hidden="true"></div>
+  </a>
+</header>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="container max-width-container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h2 data-i18="about.title">À propos</h2>
+        <p class="text-muted" data-i18="about.lead">L'ONG Bien‑être est basée à Ahoué-Abidjan, Côte d'Ivoire. Nous privilégions une approche intégrée mêlant prévention, réinsertion et services de santé pour renforcer la résilience des communautés.</p><a class="btn btn-link mt-2" href="about-more.html" data-i18="about.more">En savoir plus</a>
+        <ul class="list-unstyled mt-3">
+          <li class="mb-2"><strong data-i18="about.m1">Santé</strong> — <span data-i18="about.m1.desc">Médecine générale , Diabétologie , Urologie , Cardiologie et Ophtalmologie.</span></li>
+          <li class="mb-2"><strong data-i18="about.m2">Prévention</strong> — <span data-i18="about.m2.desc">sensibilisation rurale , Visite médicale en milieu scolaire et professionnelle et campagnes de dépistages gratuits.</span></li>
+          <li class="mb-2"><strong data-i18="about.m3">Réinsertion</strong> — <span data-i18="about.m3.desc">formations professionnelles pour jeunes et ateliers pratiques.</span></li>
+        </ul>
+        <img src="images/about.jpg" loading="lazy" alt="Santé" class="img-fluid rounded about-img">
+        <a class="btn btn-outline-success mt-3" href="#vision" data-i18="about.cta">Notre vision 2030</a>
+      </div>
+      <div class="col-lg-6 text-end">
+        <img src="images/about.jpg" loading="lazy" alt="Santé" class="img-fluid rounded about-img">
+      </div>
+    </div>
+  </div>
+
+<!-- ACTIONS / FEATURES -->
+<section id="actions" class="section bg-white">
+  <div class="container max-width-container">
+    <div class="text-center mb-5">
+      <h2 data-i18="actions.title">Nos actions</h2>
+      <p class="text-muted" data-i18="actions.lead">Interventions terrain, formation et santé — conçues pour produire un impact durable.</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-feature p-3 h-100">
+          <img src="images/action1.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="actions.p1.title">Sensibilisation rurale</h5>
+            <p class="card-text" data-i18="actions.p1.text">Ateliers locaux sur l’hygiène, la nutrition et la prévention des maladies.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-feature p-3 h-100">
+          <img src="images/action2.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="actions.p2.title">Accès aux soins</h5>
+            <p class="card-text" data-i18="actions.p2.text">Cliniques mobiles, dépistages et partenariats locaux pour des soins accessibles.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-feature p-3 h-100">
+          <img src="images/action3.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="actions.p3.title">Formation des jeunes</h5>
+            <p class="card-text" data-i18="actions.p3.text">Formations métiers pour renforcer l’employabilité et l’autonomie.</p>
+          </div>
+          <a class="btn btn-outline-success mt-3" href="#reinsertion" data-i18="actions.cta">Réinsertion(Se faire enrôler)</a>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-3">
+        <div class="card card-feature p-3 h-100">
+          <img src="images/action4.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="actions.p4.title">Dépistage</h5>
+            <p class="card-text" data-i18="actions.p4.text">Campagnes régulières avec équipes médicales locales.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section id="partners" class="section">
+  <div class="container max-width-container">
+    <div class="text-center mb-4">
+      <h2 data-i18="partners.title">Partenaires</h2>
+      <p class="text-muted" data-i18="partners.lead">Nous travaillons en collaboration avec des institutions locales et internationales.</p>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 partners">
+      <img src="images/partner1.png" loading="lazy" alt="Partner 1">
+      <img src="images/partner2.png" loading="lazy" alt="Partner 2">
+      <img src="images/partner3.png" loading="lazy" alt="Partner 3">
+      <img src="images/partner4.png" loading="lazy" alt="Partner 4">
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials" class="section bg-light">
+  <div class="container max-width-container">
+    <div class="text-center mb-4">
+      <h2 data-i18="testimonials.title">Témoignages</h2>
+      <p class="text-muted" data-i18="testimonials.lead">Histoires de changement et retours des bénéficiaires.</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-6">
+        <div class="testimonial">
+          <p class="mb-2" data-i18="testimonials.quote1">"Grâce à la formation, j'ai appris un métier qui me permet aujourd'hui de subvenir aux besoins de ma famille."</p>
+          <div class="d-flex align-items-center gap-3">
+            <img src="images/person1.jpg" loading="lazy" alt="" class="rounded-circle testimonial-img">
+            <div>
+              <strong data-i18="testimonials.name1">Aissatou</strong><br>
+              <small class="text-muted" data-i18="testimonials.role1">Bénéficiaire — Ahoué</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="testimonial">
+          <p class="mb-2" data-i18="testimonials.quote2">"Les campagnes de dépistage ont protégé ma communauté et nous ont donné accès à des soins essentiels."</p>
+          <div class="d-flex align-items-center gap-3">
+            <img src="images/person2.jpg" loading="lazy" alt="" class="rounded-circle testimonial-img">
+            <div>
+              <strong data-i18="testimonials.name2">Yapi</strong><br>
+              <small class="text-muted" data-i18="testimonials.role2">Chef de village — Ahoué</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION 2030 -->
+<section id="vision" class="section">
+  <div class="container max-width-container">
+    <div class="row">
+      <div class="col-lg-8">
+        <h2 data-i18="vision.title">Vision 2030</h2>
+        <p class="text-muted" data-i18="vision.lead">D'ici 2030, L'ONG Bien‑être vise à devenir un acteur de référence en santé communautaire et en réinsertion professionnelle de la jeunesse en Afrique de l'Ouest, en touchant des centaines de milliers de bénéficiaires et en renforçant les capacités locales.</p>
+        <ul>
+          <li data-i18="vision.o1">Renforcer l’accès aux soins primaires dans les zones rurales.</li>
+          <li data-i18="vision.o2">Former 5 000 jeunes aux métiers techniques et sociaux d’ici 2030.</li>
+          <li data-i18="vision.o3">Déployer des campagnes de prévention régulières.</li>
+        </ul>
+      </div>
+      <div class="col-lg-4 text-center">
+        <img src="images/vision.jpg" loading="lazy" alt="Vision" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DONATION / CTA SECTION -->
+<section id="donate" class="section bg-light">
+  <div class="container max-width-container">
+  <div class="container max-width-container">
+    <div class="text-center mb-4">
+      <h2 data-i18="donate.title">Soutenez-nous</h2>
+      <p class="text-muted" data-i18="donate.lead">Votre soutien permet de financer nos actions sur le terrain. Choisissez comment vous voulez contribuer.</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4 text-center">
+        <div class="card p-4 h-100">
+          <h5 class="mb-3" data-i18="donate.p1.title">Faire un don</h5>
+          <p class="text-muted mb-3" data-i18="donate.p1.text">Soutenez nos campagnes de santé et de formation. Tout don compte.</p>
+          <a href="#" class="btn btn-primary open-form" data-type="don" data-i18="donate.p1.cta">Faire un don</a>
+        </div>
+      </div>
+      <div class="col-md-4 text-center">
+        <div class="card p-4 h-100">
+          <h5 class="mb-3" data-i18="donate.p2.title">Devenir partenaire</h5>
+          <p class="text-muted mb-3" data-i18="donate.p2.text">Collaborations institutionnelles, financements et synergies pour un impact durable.</p>
+          <a href="#" class="btn btn-outline-primary open-form" data-type="partenaire" data-i18="donate.p2.cta">Devenir partenaire</a>
+        </div>
+      </div>
+   <div class="col-md-4 text-center">
+  <div class="card p-4 h-100">
+    <h5 class="mb-3" data-i18="donate.p4.title">Devenir membre</h5>
+    <p class="text-muted mb-3" data-i18="donate.p4.text">
+      Adhérez pleinement à notre vision et participez activement à notre impact social.
+    </p><a class="btn btn-link mt-2" href="membership-more.html" data-i18="membership.more">En savoir plus</a>
+    <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#membershipFormModal" data-i18="donate.p4.cta">
+      Devenir membre
+    </button>
+  </div>
+</div>
+
+      <div class="col-md-4 text-center">
+        <div class="card p-4 h-100">
+          <h5 class="mb-3" data-i18="donate.p3.title">Devenir bénévole</h5>
+          <p class="text-muted mb-3" data-i18="donate.p3.text">Rejoignez nos équipes sur le terrain et participez aux actions locales.</p>
+          <a href="#" class="btn btn-outline-success open-form" data-type="benevole" data-i18="donate.p3.cta">Devenir bénévole</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- BLOG PREVIEW -->
+<section id="blog" class="section bg-white">
+  <div class="container max-width-container">
+    <div class="text-center mb-4">
+      <h2 data-i18="blog.title">Actualités</h2>
+      <p class="text-muted" data-i18="blog.lead">Dernières nouvelles et ressources sur la santé et la prévention.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <article class="card h-100">
+          <img src="images/blog1.jpg" loading="lazy" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="blog.post1.title">Campagne de dépistage : bilan</h5>
+            <p class="card-text text-muted" data-i18="blog.post1.excerpt">Retour sur la campagne de dépistage menée ce trimestre dans la région.</p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-4">
+        <article class="card h-100">
+          <img src="images/blog2.jpg" loading="lazy" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="blog.post2.title">Formation : témoignage d’un apprenant</h5>
+            <p class="card-text text-muted" data-i18="blog.post2.excerpt">Comment la formation professionnelle a changé la trajectoire d’un jeune.</p>
+          </div>
+        </article>
+      </div>
+      <div class="col-md-4">
+        <article class="card h-100">
+          <img src="images/blog3.jpg" loading="lazy" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title" data-i18="blog.post3.title">Prévention : gestes simples</h5>
+            <p class="card-text text-muted" data-i18="blog.post3.excerpt">Actions pratiques pour limiter les risques sanitaires dans vos communautés.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REINSERTION -->
+<section id="reinsertion" class="section bg-light">
+  <div class="container max-width-container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+  <div id="reinsertionCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner rounded shadow">
+      <div class="carousel-item active">
+        <img src="images/reinsertion1.jpg" class="d-block w-100" alt="Réinsertion 1">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion2.jpg" class="d-block w-100" alt="Réinsertion 2">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion3.jpg" class="d-block w-100" alt="Réinsertion 3">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion4.jpg" class="d-block w-100" alt="Réinsertion 4">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion5.jpg" class="d-block w-100" alt="Réinsertion 5">
+      </div>
+    </div>
+    <!-- Contrôles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#reinsertionCarousel" data-bs-slide="prev" title="Précédent" aria-label="Précédent">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Précédent</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#reinsertionCarousel" data-bs-slide="next" title="Suivant" aria-label="Suivant">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</div>
+
+      <div class="col-lg-6">
+        <h2 data-i18="reinsertion.title">Réinsertion</h2>
+        <p class="text-muted" data-i18="reinsertion.text">
+  L’ONG Bien-être accompagne les jeunes, femmes et hommes en difficulté vers une nouvelle vie.
+  Grâce à nos programmes de formation, d’accompagnement social et de suivi personnalisé,
+          nous redonnons une chance à chacun de s’intégrer durablement.
+</p><a class="btn btn-link mt-2" href="reinsertion-more.html" data-i18="reinsertion.more">En savoir plus</a>
+       <ul class="list-unstyled mb-4">
+         <li data-i18="reinsertion.li1">✔️ Formations professionnelles adaptées</li>
+         <li data-i18="reinsertion.li2">✔️ Accompagnement social et psychologique</li>
+         <li data-i18="reinsertion.li3">✔️ Suivi pour l’insertion dans le monde du travail</li>
+       </ul>     
+<button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#reinsertionFormModal" data-i18="reinsertion.enroll">
+  Se faire enrôler
+</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTACT -->
+<section id="contact" class="section bg-light">
+  <div class="container max-width-container">
+    <div class="text-center mb-4">
+      <h2 data-i18="contact.title">Contact</h2>
+      <p class="text-muted" data-i18="contact.lead">Contactez-nous pour en savoir plus, devenir partenaire ou soutenir nos actions.</p>
+    </div>
+    <div class="row g-4">
+      <div class="col-lg-6">
+
+        <!-- ✅ Formulaire contact -->
+  <form id="contactForm">
+  <div class="mb-3">
+    <label class="form-label">Nom</label>
+    <input id="c_name" class="form-control" required placeholder="Votre nom" title="Nom">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input id="c_email" type="email" class="form-control" required placeholder="Votre email" title="Email">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Téléphone</label>
+    <input id="c_phone" type="tel" class="form-control" placeholder="+225 ..." required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Message</label>
+    <textarea id="c_message" class="form-control" rows="6" required title="Message" placeholder="Votre message"></textarea>
+  </div>
+
+  <div class="d-flex gap-2">
+    <button type="submit" class="btn btn-primary">Envoyer sur WhatsApp</button>
+  </div>
+
+  <!-- ✅ Zone de confirmation -->
+  <div id="formAlert" class="mt-3 d-none"></div>
+  </form>
+
+      </div>
+      <div class="col-lg-6">
+        <div class="card p-4">
+          <h5 data-i18="contact.info">Informations</h5>
+          <p class="mb-1"><strong>Adresse :</strong> Ahoué-Abidjan, Côte d'Ivoire</p>
+          <p class="mb-1"><strong>Email :</strong> ongbienetre349@gmail.com</p>
+          <p class="mb-1"><strong>contact :</strong> +2250150632626 / 0769202011</p>
+          <p class="mb-0"><strong>Horaires :</strong> 24h/24 * 7j/7</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="icône"></div>
+
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="container max-width-container">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <div class="mb-3 mb-md-0">
+        &copy; <span id="year"></span> ONG Bien‑être — Ahoué-Abidjan, Côte d'Ivoire
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <div class="social-follow">
+          <div class="label" data-i18="footer.follow">Suivez-nous sur nos réseaux</div>
+          <div class="social-icons d-flex">
+            <a href="https://facebook.com/yourpage" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
+              <svg viewBox="0 0 24 24" fill="#1877F2" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.03 5.66 21.16 10.44 22v-7.02H7.9v-2.9h2.54V9.37c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.61.76-1.61 1.54v1.85h2.74l-.44 2.9h-2.3V22C18.34 21.16 22 17.03 22 12.07z"/>
+              </svg>
+            </a>
+            <a href="https://www.tiktok.com/@yourprofile" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok" style="margin-left:8px;">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M9 3h3.2a3 3 0 0 0 3-3v10.2a4.8 4.8 0 1 1-4.8-4.8V3H9V3z" fill="#000"/>
+                <path d="M20 7.2a4 4 0 0 1-2.6-1V14a6 6 0 1 1-6-6v1.2a4.8 4.8 0 1 0 4.8 4.8V6.3c.9.6 2 1 3.8.9V7.2z" fill="#EE1D52"/>
+              </svg>
+            </a>
+            <a href="https://www.linkedin.com/company/yourcompany" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn" style="margin-left:8px;">
+              <svg viewBox="0 0 24 24" fill="#0A66C2" xmlns="http://www.w3.org/2000/svg" aria-hidden>
+                <path d="M20.45 20.45h-3.55v-5.44c0-1.3-.02-2.98-1.82-2.98-1.82 0-2.1 1.42-2.1 2.89v5.53H9.4V9h3.41v1.56h.05c.48-.9 1.66-1.82 3.42-1.82 3.66 0 4.34 2.41 4.34 5.55v6.17zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM6.98 20.45H3.7V9h3.28v11.45z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp floating -->
+<div class="whatsapp-float">
+  <a href="https://wa.me/2250150632626" target="_blank" rel="noopener" aria-label="WhatsApp">
+    <button class="btn" title="WhatsApp">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <path d="M20.52 3.48A11.95 11.95 0 0 0 12 0C5.373 0 0 5.373 0 12c0 2.116.554 4.166 1.605 5.985L0 24l6.297-1.639A11.94 11.94 0 0 0 12 24c6.627 0 12-5.373 12-12 0-3.213-1.253-6.218-3.48-8.52z" fill="#fff" opacity="0.06"></path>
+        <path d="M17.472 14.382c-.297-.148-1.758-.868-2.03-.967-.273-.098-.472-.148-.672.148-.198.297-.768.966-.942 1.164-.173.198-.347.223-.644.074-.297-.148-1.255-.462-2.39-1.475-.885-.789-1.48-1.761-1.654-2.059-.173-.297-.018-.458.13-.605.134-.133.298-.347.447-.52.149-.173.198-.297.298-.495.099-.198.05-.371-.025-.52-.074-.148-.672-1.611-.92-2.206-.242-.579-.487-.5-.673-.51l-.574-.01c-.198 0-.52.074-.793.371s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487 0.709.306 1.26.489 1.692.626.71.226 1.356.194 1.866.118.568-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.413-.074-.123-.273-.198-.57-.347z" fill="#fff"></path>
+      </svg>
+    </button>
+  </a>
+</div>
+
+
+<!-- ✅ Formulaire unique (modale Don / Partenaire / Bénévole) -->
+<div class="modal fade" id="unifiedFormModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="unifiedFormTitle">Formulaire</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+
+        
+
+        <!-- ✅ Zone de confirmation -->
+        <div id="unifiedAlert" class="mt-3" style="display:none;"></div>
+
+        <form id="unifiedForm">
+  <div class="row g-2">
+    <div class="col-md-6">
+      <label class="form-label">Nom</label>
+      <input id="u_name" class="form-control" required>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Email</label>
+      <input id="u_email" type="email" class="form-control" required>
+    </div>
+  </div>
+
+  <div class="mb-3 mt-2">
+    <label class="form-label">Téléphone</label>
+    <input id="u_phone" type="tel" class="form-control" placeholder="+225 ..." required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Objet</label>
+    <select id="u_type" class="form-control" required>
+      <option value="don">Faire un don</option>
+      <option value="partenaire">Devenir partenaire</option>
+      <option value="benevole">Devenir bénévole</option>
+    </select>
+  </div>
+
+  <!-- Section Don -->
+  <div id="donOptions" style="display:none; border-left:3px solid #e9ecef; padding-left:12px; margin-bottom:12px;">
+    <div class="mb-2">
+      <label class="form-label">Type de don</label>
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-success flex-fill" id="chooseCash">Don en argent</button>
+        <button type="button" class="btn btn-outline-primary flex-fill" id="chooseInKind">Don en nature</button>
+      </div>
+      <input type="hidden" id="don_mode" value="">
+    </div>
+
+    <div id="cashFields" style="display:none;">
+      <div class="mb-2">
+        <label class="form-label">Montant (XOF)</label>
+        <input id="don_amount" type="number" min="1" class="form-control" placeholder="Ex: 5000">
+      </div>
+    </div>
+
+    <div id="inKindFields" style="display:none;">
+      <div class="mb-2">
+        <label class="form-label">Description du don en nature</label>
+        <textarea id="in_kind_description" class="form-control" rows="3"></textarea>
+      </div>
+      <div class="mb-2">
+        <label class="form-label">Mode d'envoi / collecte</label>
+        <select id="in_kind_delivery" class="form-control">
+          <option value="deliver">Je livre moi-même</option>
+          <option value="collect">Vous passez le collecter</option>
+          <option value="shipping">Envoi postal / transporteur</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section Partenaire -->
+  <div id="partnerFields" style="display:none; border-left:3px solid #e9ecef; padding-left:12px; margin-bottom:12px;">
+    <div class="mb-2">
+      <label class="form-label">Nom de l'organisation</label>
+      <input id="partner_org" class="form-control">
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Objet de la collaboration</label>
+      <textarea id="partner_msg" class="form-control" rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- Section Bénévole -->
+  <div id="volunteerFields" style="display:none; border-left:3px solid #e9ecef; padding-left:12px; margin-bottom:12px;">
+    <div class="mb-2">
+      <label class="form-label">Disponibilités</label>
+      <input id="vol_availability" class="form-control" placeholder="Ex: Week-ends, Semaine matin">
+    </div>
+    <div class="mb-2">
+      <label class="form-label">Compétences ou intérêt</label>
+      <textarea id="vol_skills" class="form-control" rows="2"></textarea>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Message</label>
+    <textarea id="u_message" class="form-control" rows="4"></textarea>
+  </div>
+
+  <div class="d-flex gap-2 justify-content-end">
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+  </div>
+</form>
+
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- MODALE REINSERTION -->
+<div class="modal fade" id="reinsertionFormModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Formulaire de Réinsertion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="reinsertionForm">
+          <div class="row g-2">
+            <div class="col-md-6">
+              <label class="form-label">Nom</label>
+              <input id="r_nom" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Prénom</label>
+              <input id="r_prenom" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-4">
+              <label class="form-label">Âge</label>
+              <input id="r_age" type="number" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Sexe</label>
+              <select id="r_sexe" class="form-control" required>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Téléphone</label>
+              <input id="r_tel" type="tel" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Email (optionnel)</label>
+              <input id="r_email" type="email" class="form-control">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Adresse (optionnel)</label>
+              <input id="r_adresse" class="form-control">
+            </div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Ville</label>
+              <input id="r_ville" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nationalité</label>
+              <input id="r_nationalite" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6">
+              <label class="form-label">Situation matrimoniale</label>
+              <select id="r_matrimonial" class="form-control" required>
+                <option value="Célibataire">Célibataire</option>
+                <option value="Marié(e)">Marié(e)</option>
+                <option value="Divorcé(e)">Divorcé(e)</option>
+                <option value="Veuf(ve)">Veuf(ve)</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Niveau d’études</label>
+              <select id="r_etudes" class="form-control" required>
+                <option value="Aucun">Aucun</option>
+                <option value="Primaire">Primaire</option>
+                <option value="Secondaire">Secondaire</option>
+                <option value="Supérieur">Supérieur</option>
+                <option value="Formation professionnelle">Formation professionnelle</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="mb-3 mt-2">
+            <label class="form-label">Situation actuelle</label>
+            <select id="r_situation" class="form-control" required>
+              <option value="Sans emploi">Sans emploi</option>
+              <option value="Étudiant">Étudiant</option>
+              <option value="Travailleur précaire">Travailleur précaire</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Compétences ou domaine souhaité</label>
+            <textarea id="r_competences" class="form-control" rows="3" required></textarea>
+          </div>
+
+          <div class="d-flex gap-2 justify-content-end">
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+          
+<!-- MODALE ADHÉSION -->
+<div class="modal fade" id="membershipFormModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Formulaire d’adhésion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="membershipForm" enctype="multipart/form-data">
+          <div class="row g-2">
+            <div class="col-md-6"><label class="form-label">Nom</label><input name="nom" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Prénoms</label><input name="prenoms" class="form-control" required></div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6"><label class="form-label">Date de naissance</label><input type="date" name="naissance" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Lieu de naissance</label><input name="lieu" class="form-control" required></div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6"><label class="form-label">Type de pièce d’identité</label>
+              <select name="piece" class="form-control" required>
+                <option value="CNI">CNI</option>
+                <option value="Passeport">Passeport</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+            <div class="col-md-6"><label class="form-label">Numéro de pièce</label><input name="numero_piece" class="form-control" required></div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6"><label class="form-label">Pays</label><input name="pays" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Ville</label><input name="ville" class="form-control" required></div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6"><label class="form-label">Téléphone</label><input type="tel" name="tel" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required></div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6"><label class="form-label">Profession</label><input name="profession" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Sexe</label>
+              <select name="sexe" class="form-control" required>
+                <option value="Homme">Homme</option>
+                <option value="Femme">Femme</option>
+                <option value="Autre">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-2 mt-2">
+            <div class="col-md-6"><label class="form-label">Nationalité</label><input name="nationalite" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Niveau d’étude</label><input name="niveau" class="form-control"></div>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label">Motivation</label>
+            <textarea name="motivation" class="form-control" rows="4" required></textarea>
+          </div>
+
+          <div class="mt-3">
+            <label class="form-label">Photo d’identité</label>
+            <input type="file" name="photo" class="form-control" accept="image/*" required>
+          </div>
+
+          <div class="mt-4">
+            <label class="form-label">Paiement : (Sélectionnez ce que vous payez)</label>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="payAdhesion" value="true" id="payAdhesion">
+              <label class="form-check-label" for="payAdhesion">Frais d’adhésion</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="payCotisation" value="true" id="payCotisation">
+              <label class="form-check-label" for="payCotisation">Cotisation annuelle</label>
+            </div>
+          </div>
+
+          <div class="mt-4 d-flex gap-2 justify-content-end">
+            <button type="submit" class="btn btn-primary">Payer et envoyer</button>
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+          </div>
+
+          <div id="membershipAlert" class="mt-3" style="display:none;"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker-container">
+  <div class="ticker">
+    <div class="ticker-content"></div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const ongPhone = "2250150632626"; // numéro WhatsApp ONG
+const cinetpayUrl = "https://secure.cinetpay.com/checkout/ONG-Bienetre"; // ton lien CinetPay
+
+// Contact form
+document.getElementById("contactForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const name = document.getElementById("c_name").value;
+  const email = document.getElementById("c_email").value;
+  const phone = document.getElementById("c_phone").value;
+  const message = document.getElementById("c_message").value;
+
+  const text = `📩 Nouveau contact ONG Bien-être%0A
+Nom: ${name}%0A
+Email: ${email}%0A
+Téléphone: ${phone}%0A
+Message: ${message}`;
+
+  window.open(`https://wa.me/${ongPhone}?text=${text}`, "_blank");
+});
+
+// Unified form
+document.getElementById("unifiedForm").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const name = document.getElementById("u_name").value;
+  const email = document.getElementById("u_email").value;
+  const phone = document.getElementById("u_phone").value;
+  const type = document.getElementById("u_type").value;
+  const message = document.getElementById("u_message").value;
+
+  if (type === "don") {
+    window.location.href = cinetpayUrl;
+    return;
+  }
+
+  const text = `📩 Nouvelle demande ONG Bien-être%0A
+Nom: ${name}%0A
+Email: ${email}%0A
+Téléphone: ${phone}%0A
+Type: ${type}%0A
+Message: ${message}`;
+
+  window.open(`https://wa.me/${ongPhone}?text=${text}`, "_blank");
+});
+</script>
+
+<script>
+// --- Gestion ouverture modale avec pré‑sélection ---
+document.querySelectorAll(".open-form").forEach(btn => {
+  btn.addEventListener("click", function(e){
+    e.preventDefault();
+    const type = this.dataset.type;
+
+    // Pré‑sélectionner le type
+    const typeSelect = document.getElementById("u_type");
+    if(typeSelect) typeSelect.value = type;
+
+    // Afficher la bonne section
+    document.getElementById("donOptions").style.display = (type === "don") ? "block" : "none";
+    document.getElementById("partnerFields").style.display = (type === "partenaire") ? "block" : "none";
+    document.getElementById("volunteerFields").style.display = (type === "benevole") ? "block" : "none";
+
+    // Réinitialiser sous‑choix don
+    document.getElementById("don_mode").value = "";
+    document.getElementById("cashFields").style.display = "none";
+    document.getElementById("inKindFields").style.display = "none";
+
+    // Ouvrir la modale
+    const modal = new bootstrap.Modal(document.getElementById("unifiedFormModal"));
+    modal.show();
+  });
+});
+
+// --- Gestion changement manuel du select ---
+document.getElementById("u_type").addEventListener("change", function(){
+  const val = this.value;
+  document.getElementById("donOptions").style.display = (val === "don") ? "block" : "none";
+  document.getElementById("partnerFields").style.display = (val === "partenaire") ? "block" : "none";
+  document.getElementById("volunteerFields").style.display = (val === "benevole") ? "block" : "none";
+});
+
+// --- Boutons Don en argent / Don en nature ---
+document.getElementById("chooseCash").addEventListener("click", () => {
+  document.getElementById("don_mode").value = "argent";
+  document.getElementById("cashFields").style.display = "block";
+  document.getElementById("inKindFields").style.display = "none";
+});
+
+document.getElementById("chooseInKind").addEventListener("click", () => {
+  document.getElementById("don_mode").value = "nature";
+  document.getElementById("cashFields").style.display = "none";
+  document.getElementById("inKindFields").style.display = "block";
+});
+</script>
+
+<script>
+document.getElementById("reinsertionForm").addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const nom = document.getElementById("r_nom").value;
+  const prenom = document.getElementById("r_prenom").value;
+  const age = document.getElementById("r_age").value;
+  const sexe = document.getElementById("r_sexe").value;
+  const tel = document.getElementById("r_tel").value;
+  const email = document.getElementById("r_email").value;
+  const adresse = document.getElementById("r_adresse").value;
+  const ville = document.getElementById("r_ville").value;
+  const nationalite = document.getElementById("r_nationalite").value;
+  const matrimonial = document.getElementById("r_matrimonial").value;
+  const etudes = document.getElementById("r_etudes").value;
+  const situation = document.getElementById("r_situation").value;
+  const competences = document.getElementById("r_competences").value;
+
+  const text = `📂 [Réinsertion] Nouvelle demande%0A
+Nom: ${nom}%0A
+Prénom: ${prenom}%0A
+Âge: ${age}%0A
+Sexe: ${sexe}%0A
+Téléphone: ${tel}%0A
+Email: ${email || "Non renseigné"}%0A
+Adresse: ${adresse || "Non renseignée"}%0A
+Ville: ${ville}%0A
+Nationalité: ${nationalite}%0A
+Situation matrimoniale: ${matrimonial}%0A
+Niveau d’études: ${etudes}%0A
+Situation actuelle: ${situation}%0A
+Compétences / Domaine souhaité: ${competences}`;
+
+  const ongPhone = "2250150632626"; // numéro WhatsApp ONG
+  window.open(`https://wa.me/${ongPhone}?text=${text}`, "_blank");
+});
+</script>
+
+
+
+<script>
+/* --- i18n dictionary including added keys for contact.phone --- */
+const i18n = {
+  fr: {
+    "nav.home":"Accueil","nav.about":"À propos","nav.actions":"Nos actions","nav.partners":"Partenaires","nav.testimonials":"Témoignages","nav.vision":"Vision 2030","nav.blog":"Blog","nav.donate":"Faire un don","nav.reinsertion":"Réinsertion","nav.contact":"Contact",
+    "hero.title":"ONG Bien-être — Votre bien-être, notre priorité",
+    "hero.subtitle":"Nous œuvrons pour la réinsertion, la prévention et l’accès aux soins. Agissons ensemble pour le bien-être de nos communautés.",
+    "hero.cta1":"Découvrir nos actions","hero.cta2":"Nous contacter","hero.scroll":"Faire défiler",
+    "about.title":"À propos","about.lead":"L'ONG Bien-être est basée à Ahoué-Abidjan, Côte d'Ivoire. Nous privilégions une approche intégrée mêlant prévention, réinsertion et services de santé pour renforcer la résilience des communautés.","about.m1":"Santé","about.m1.desc":"Médecine générale , Diabétologie , Urologie , Cardiologie et Ophtalmologie.","about.m2":"Prévention","about.m2.desc":"sensibilisation rurale , Visite médicale en milieu scolaire et professionnelle et campagnes de dépistages gratuits.","about.m3":"Réinsertion","about.m3.desc":"formations professionnelles pour jeunes et ateliers pratiques.","about.cta":"Notre vision 2030",
+    "about.more": "En savoir plus",
+    "about.more.title": "À propos de l’ONG Bien-être",
+    "about.more.text": "L’ONG Bien-être est née de la volonté de renforcer la résilience des communautés rurales et urbaines en Côte d’Ivoire. Nous développons des programmes intégrés de santé, de prévention et de réinsertion socio-professionnelle. Nos actions s’appuient sur des partenariats solides avec les institutions locales et internationales.",
+    "about.more.back": "Retour à l’accueil",
+    "actions.title":"Nos actions","actions.lead":"Interventions terrain, formation et santé — conçues pour produire un impact durable.",
+    "actions.p1.title":"Sensibilisation rurale","actions.p1.text":"Ateliers locaux sur l’hygiène, la nutrition et la prévention des maladies.",
+    "actions.p2.title":"Accès aux soins","actions.p2.text":"Cliniques mobiles, dépistages et partenariats locaux pour des soins accessibles.",
+    "actions.p3.title":"Formation des jeunes","actions.p3.text":"Formations métiers pour renforcer l’employabilité et l’autonomie.",
+    "actions.p4.title":"Dépistage","actions.p4.text":"Campagnes régulières avec équipes médicales locales.",
+    "partners.title":"Partenaires","partners.lead":"Nous travaillons en collaboration avec des institutions locales et internationales.",
+    "testimonials.title":"Témoignages","testimonials.lead":"Histoires de changement et retours des bénéficiaires.",
+    "testimonials.quote1":"\"Grâce à la formation, j'ai appris un métier qui me permet aujourd'hui de subvenir aux besoins de ma famille.\"","testimonials.name1":"Aissatou","testimonials.role1":"Bénéficiaire — Ahoué",
+    "testimonials.quote2":"\"Les campagnes de dépistage ont protégé ma communauté et nous ont donné accès à des soins essentiels.\"","testimonials.name2":"Yapi","testimonials.role2":"Chef de village — Ahoué",
+    "vision.title":"Vision 2030","vision.lead":"D'ici 2030, L'ONG Bien-être vise à devenir un acteur de référence en santé communautaire et en réinsertion professionnelle de la jeunesse en Afrique de l'Ouest, en touchant des centaines de milliers de bénéficiaires et en renforçant les capacités locales.","vision.o1":"Renforcer l’accès aux soins primaires dans les zones rurales.","vision.o2":"Former 5 000 jeunes aux métiers techniques et sociaux d’ici 2030.","vision.o3":"Déployer des campagnes de prévention régulières.",
+    "donate.title":"Soutenez-nous","donate.lead":"Votre soutien permet de financer nos actions sur le terrain. Choisissez comment vous voulez contribuer.","donate.p1.title":"Faire un don","donate.p1.text":"Soutenez nos campagnes de santé et de formation. Tout don compte.","donate.p1.cta":"Faire un don","donate.p2.title":"Devenir partenaire","donate.p2.text":"Collaborations institutionnelles, financements et synergies pour un impact durable.","donate.p2.cta":"Devenir partenaire","donate.p3.title":"Devenir bénévole","donate.p3.text":"Rejoignez nos équipes sur le terrain et participez aux actions locales.","donate.p3.cta":"Devenir bénévole",
+    "donate.p4.title": "Devenir membre",
+    "donate.p4.text": "Adhérez pleinement à notre vision et participez activement à notre impact social.",
+    "donate.p4.cta": "Devenir membre",
+    "blog.title":"Actualités","blog.lead":"Dernières nouvelles et ressources sur la santé et la prévention.","blog.post1.title":"Campagne de dépistage : bilan","blog.post1.excerpt":"Retour sur la campagne de dépistage menée ce trimestre dans la région.","blog.post2.title":"Formation : témoignage d’un apprenant","blog.post2.excerpt":"Comment la formation professionnelle a changé la trajectoire d’un jeune.","blog.post3.title":"Prévention : gestes simples","blog.post3.excerpt":"Actions pratiques pour limiter les risques sanitaires dans vos communautés.",
+    "reinsertion.title": "Réinsertion",
+    "reinsertion.text": "L’ONG Bien-être accompagne les jeunes, femmes et hommes en difficulté vers une nouvelle vie. Grâce à nos programmes de formation, d’accompagnement social et de suivi personnalisé, nous redonnons une chance à chacun de s’intégrer durablement.",
+    "reinsertion.li1": "✔️ Formations professionnelles adaptées",
+    "reinsertion.li2": "✔️ Accompagnement social et psychologique",
+    "reinsertion.li3": "✔️ Suivi pour l’insertion dans le monde du travail",
+    "reinsertion.enroll": "Se faire enrôler",
+    "reinsertion.more": "En savoir plus",
+    "reinsertion.more.title": "Programme de Réinsertion",
+    "reinsertion.more.text": "L’ONG Bien-être accompagne les jeunes, femmes et hommes en difficulté vers une nouvelle vie. Nos programmes incluent des formations professionnelles adaptées, un accompagnement social et psychologique, ainsi qu’un suivi personnalisé pour favoriser une insertion durable dans le monde du travail.",
+    "reinsertion.more.back": "Retour à l’accueil",
+    "reinsertion.more.enroll": "Se faire enrôler",
+    "contact.title":"Contact","contact.lead":"Contactez-nous pour en savoir plus, devenir partenaire ou soutenir nos actions.","contact.name":"Nom","contact.email":"Email","contact.phone":"Téléphone","contact.message":"Message","contact.send":"Envoyer","contact.reset":"Réinitialiser","contact.info":"Informations",
+    "footer.follow":"Suivez-nous sur nos réseaux"
+  },
+  en: {
+    "nav.home":"Home","nav.about":"About","nav.actions":"Our Work","nav.partners":"Partners","nav.testimonials":"Testimonials","nav.vision":"Vision 2030","nav.blog":"Blog","nav.donate":"Donate","nav.reinsertion":"Reintegration","nav.contact":"Contact",
+    "hero.title":"ONG Bien-être — Your well-being, our priority","hero.subtitle":"We work on reintegration, prevention and access to healthcare. Let’s act together for the well-being of our communities.","hero.cta1":"Explore our work","hero.cta2":"Contact us","hero.scroll":"Scroll down",
+    "about.title":"About","about.lead":"ONG Bien-être is based in Ahoué-Abidjan, Côte d'Ivoire. We use an integrated approach combining prevention, reintegration and health services to strengthen community resilience.","about.m1":"Health","about.m1.desc":"General Medicine, Diabetology, Urology, Cardiology and Ophtalmology.","about.m2":"Prevention","about.m2.desc":"rural awareness , Medical examination in school and professional settings and free screenings.","about.m3":"Reintegration","about.m3.desc":"vocational training for youth and practical workshops.","about.cta":"Our Vision 2030",
+    "about.more": "Learn more",
+    "about.more.title": "About ONG Bien-être",
+    "about.more.text": "ONG Bien-être was founded with the mission of strengthening the resilience of rural and urban communities in Côte d’Ivoire. We develop integrated programs in health, prevention, and socio-professional reintegration. Our actions rely on strong partnerships with local and international institutions.",
+    "about.more.back": "Back to home",
+    "actions.title":"Our Work","actions.lead":"Field interventions, training and health — designed for lasting impact.",
+    "actions.p1.title":"Rural outreach","actions.p1.text":"Local workshops on hygiene, nutrition and disease prevention.",
+    "actions.p2.title":"Access to care","actions.p2.text":"Mobile clinics, screenings and local partnerships for accessible care.",
+    "actions.p3.title":"Youth training","actions.p3.text":"Vocational trainings to boost employability and autonomy.",
+    "actions.p4.title":"Screening","actions.p4.text":"Regular campaigns with local medical teams.",
+    "partners.title":"Partners","partners.lead":"We collaborate with local and international institutions.",
+    "testimonials.title":"Testimonials","testimonials.lead":"Stories of change and beneficiary feedback.",
+    "testimonials.quote1":"\"Thanks to the training, I learned a trade that now allows me to provide for my family.\"","testimonials.name1":"Aissatou","testimonials.role1":"Beneficiary — Ahoué",
+    "testimonials.quote2":"\"The screening campaigns protected my community and gave us access to essential care.\"","testimonials.name2":"Yapi","testimonials.role2":"Village leader — Ahoué",
+    "vision.title":"Vision 2030","vision.lead":"By 2030, ONG Bien-être aims to be a reference actor in community health and in the professional reintegration of youth in West Africa, reaching hundreds of thousands and strengthening local capacities.","vision.o1":"Strengthen access to primary care in rural areas.","vision.o2":"Train 5,000 youth in technical and social trades by 2030.","vision.o3":"Deploy regular prevention campaigns.",
+    "donate.title":"Support us","donate.lead":"Your support funds our field work. Choose how you want to contribute.","donate.p1.title":"Donate","donate.p1.text":"Support our health and training campaigns. Every gift matters.","donate.p1.cta":"Donate","donate.p2.title":"Become a partner","donate.p2.text":"Institutional collaborations, funding and synergies for lasting impact.","donate.p2.cta":"Become a partner","donate.p3.title":"Become a volunteer","donate.p3.text":"Join our teams on the ground and take part in local activities.","donate.p3.cta":"Become a volunteer",
+    "donate.p4.title": "Become a member",
+    "donate.p4.text": "Fully embrace our vision and actively contribute to our social impact.",
+    "donate.p4.cta": "Become a member",
+    "blog.title":"News","blog.lead":"Latest updates and resources on health and prevention.","blog.post1.title":"Screening campaign: summary","blog.post1.excerpt":"Summary of the screening campaign conducted this quarter in the region.","blog.post2.title":"Training: a learner's testimony","blog.post2.excerpt":"How vocational training changed one young person's trajectory.","blog.post3.title":"Prevention: simple actions","blog.post3.excerpt":"Practical actions to reduce health risks in your communities.",
+    "reinsertion.title": "Reintegration",
+    "reinsertion.text": "ONG Bien-être supports young people, women, and men in difficulty towards a new life. Through our training programs, social support, and personalized follow-up, we give everyone a chance to reintegrate sustainably.",
+    "reinsertion.li1": "✔️ Tailored vocational training",
+    "reinsertion.li2": "✔️ Social and psychological support",
+    "reinsertion.li3": "✔️ Follow-up for integration into the workforce",
+    "reinsertion.enroll": "Enroll now",
+    "reinsertion.more": "Learn more",
+    "reinsertion.more.title": "Reintegration Program",
+    "reinsertion.more.text": "ONG Bien-être supports young people, women, and men in difficulty towards a new life. Our programs include tailored vocational training, social and psychological support, and personalized follow-up to ensure sustainable integration into the workforce.",
+    "reinsertion.more.back": "Back to home",
+    "reinsertion.more.enroll": "Enroll now",
+    "contact.title":"Contact","contact.lead":"Get in touch to learn more, partner or support our work.","contact.name":"Name","contact.email":"Email","contact.phone":"Phone","contact.message":"Message","contact.send":"Send","contact.reset":"Reset","contact.info":"Information",
+    "footer.follow":"Follow us on social"
+  }
+};
+
+/* Language switcher */
+let = currentLang = 'fr';
+const setLang = (lang) => {
+  currentLang = lang;
+  document.querySelectorAll('[data-i18]').forEach(el=>{
+    const key = el.getAttribute('data-i18');
+    if(i18n[lang] && i18n[lang][key]) {
+      el.textContent = i18n[lang][key];
+    }
+  });
+  const lf = document.getElementById('langField');
+  if(lf) lf.value = lang;
+  const lf2 = document.getElementById('langFieldUnified');
+  if(lf2) lf2.value = lang;
+  document.documentElement.lang = (lang === 'fr') ? 'fr' : 'en';
+};
+document.querySelectorAll('.language-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.language-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setLang(btn.dataset.lang);
+  });
+});
+setLang('fr');
+const frBtn = document.querySelector('.language-btn[data-lang="fr"]');
+if(frBtn) frBtn.classList.add('active');
+
+/* Smooth scroll offset for sticky navbar */
+const offsetAnchor = () => { if(location.hash.length !== 0) window.scrollTo(window.scrollX, window.scrollY - 70); };
+window.addEventListener("hashchange", offsetAnchor);
+
+/* Intersection Observer for scroll reveal on .card-feature */
+const revealObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('revealed');
+      revealObserver.unobserve(entry.target);
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.card-feature').forEach(card=> revealObserver.observe(card));
+
+/* Set footer year */
+const yearEl = document.getElementById('year');
+if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+/* --- Config CinetPay (remplace par tes vraies infos) --- */
+const CINETPAY_CONFIG = {
+  site_id: 'YOUR_SITE_ID',
+  api_key: 'YOUR_API_KEY',
+  currency: 'XOF',
+  return_url: 'https://ton-domaine.net/#donate',
+  cancel_url: 'https://ton-domaine.net/#donate'
+};
+function generateTransactionId() {
+  return 'ONG-' + Date.now();
+}
+
+/* --- App logic --- */
+document.addEventListener("DOMContentLoaded", () => {
+  /* Elements */
+  const contactForm    = document.getElementById("contactForm");
+  const formAlert      = document.getElementById("formAlert");
+  const unifiedForm    = document.getElementById("unifiedForm");
+  const unifiedAlert   = document.getElementById("unifiedAlert");
+  const hiddenType     = document.getElementById("hiddenType");
+  const typeSelect     = document.getElementById("u_type_select");
+  const donOptions     = document.getElementById("donOptions");
+  const partnerFields  = document.getElementById("partnerFields");
+  const volunteerFields= document.getElementById("volunteerFields");
+  const chooseCash     = document.getElementById("chooseCash");
+  const chooseInKind   = document.getElementById("chooseInKind");
+  const donMode        = document.getElementById("don_mode");
+  const cashFields     = document.getElementById("cashFields");
+  const inKindFields   = document.getElementById("inKindFields");
+
+  /* Boutons CTA ouvrent la modale */
+  document.querySelectorAll(".open-form").forEach(btn => {
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      const type = this.dataset.type;
+      if(hiddenType) hiddenType.value = type;
+      if(typeSelect) typeSelect.value = type;
+
+      // Afficher les sections selon le type
+      if(donOptions)      donOptions.style.display     = (type === "don")        ? "block" : "none";
+      if(partnerFields)   partnerFields.style.display  = (type === "partenaire") ? "block" : "none";
+      if(volunteerFields) volunteerFields.style.display= (type === "benevole")   ? "block" : "none";
+
+      // Reset sous-choix
+      if(donMode) donMode.value = "";
+      if(cashFields)   cashFields.style.display = "none";
+      if(inKindFields) inKindFields.style.display = "none";
+
+      const modal = new bootstrap.Modal(document.getElementById("unifiedFormModal"));
+      modal.show();
+    });
+  });
+
+  /* Sélecteur interne dans la modale */
+  if(typeSelect){
+    typeSelect.addEventListener("change", () => {
+      const val = typeSelect.value;
+      if(hiddenType) hiddenType.value = val;
+      if(donOptions)      donOptions.style.display     = (val === "don")        ? "block" : "none";
+      if(partnerFields)   partnerFields.style.display  = (val === "partenaire") ? "block" : "none";
+      if(volunteerFields) volunteerFields.style.display= (val === "benevole")   ? "block" : "none";
+    });
+  }
+
+  /* Don argent/nature */
+  if(chooseCash){
+    chooseCash.addEventListener("click", () => {
+      if(donMode) donMode.value = "argent";
+      if(cashFields)   cashFields.style.display = "block";
+      if(inKindFields) inKindFields.style.display = "none";
+    });
+  }
+  if(chooseInKind){
+    chooseInKind.addEventListener("click", () => {
+      if(donMode) donMode.value = "nature";
+      if(cashFields)   cashFields.style.display = "none";
+      if(inKindFields) inKindFields.style.display = "block";
+    });
+  }
+
+  /* Formulaire Contact */
+  if(contactForm){
+    contactForm.addEventListener("submit", function(e){
+      e.preventDefault();
+      const formData = new FormData(contactForm);
+      fetch(window.location.pathname, { method: "POST", body: formData })
+      .then(() => {
+        if(formAlert){
+          formAlert.className = "alert alert-success";
+          formAlert.textContent = "Merci ! Votre message a bien été envoyé.";
+          formAlert.style.display = "block";
+        }
+        contactForm.reset();
+        setTimeout(() => { if(formAlert) formAlert.style.display = "none"; }, 5000);
+      })
+      .catch(() => {
+        if(formAlert){
+          formAlert.className = "alert alert-danger";
+          formAlert.textContent = "Une erreur est survenue, veuillez réessayer.";
+          formAlert.style.display = "block";
+        }
+        setTimeout(() => { if(formAlert) formAlert.style.display = "none"; }, 5000);
+      });
+    });
+  }
+
+  /* Formulaire Modale (Don / Partenaire / Bénévole) */
+  if(unifiedForm){
+    unifiedForm.addEventListener("submit", function(e){
+      e.preventDefault();
+
+      const type  = hiddenType ? hiddenType.value : "";
+      const mode  = donMode ? donMode.value : "";
+      const amount= document.getElementById("don_amount")?.value || '';
+      const name  = document.getElementById("u_name")?.value || '';
+      const email = document.getElementById("u_email")?.value || '';
+
+      // Don en argent → CinetPay
+      if(type === 'don' && mode === 'argent'){
+        if(!amount || Number(amount) <= 0){
+          if(unifiedAlert){
+            unifiedAlert.className = "alert alert-warning";
+            unifiedAlert.textContent = "Veuillez indiquer un montant valide pour le don en argent.";
+            unifiedAlert.style.display = "block";
+            setTimeout(() => { unifiedAlert.style.display = "none"; }, 5000);
+          }
+          return;
+        }
+        const transaction_id = generateTransactionId();
+        const params = new URLSearchParams({
+          site_id: CINETPAY_CONFIG.site_id,
+          transaction_id,
+          amount: String(amount),
+          currency: CINETPAY_CONFIG.currency,
+          description: 'Donation ONG Bienêtre',
+          return_url: CINETPAY_CONFIG.return_url,
+          cancel_url: CINETPAY_CONFIG.cancel_url,
+          customer_name: name,
+          customer_email: email
+        });
+        window.location.href = `https://secure.cinetpay.com/checkout/?${params.toString()}`;
+        return;
+      }
+
+      // Autres cas → Netlify Forms
+      const formData = new FormData(unifiedForm);
+      fetch(window.location.pathname, { method: "POST", body: formData })
+      .then(() => {
+        if(unifiedAlert){
+          unifiedAlert.className = "alert alert-success";
+          unifiedAlert.textContent = "Merci ! Votre demande a bien été envoyée.";
+          unifiedAlert.style.display = "block";
+        }
+        unifiedForm.reset();
+        setTimeout(() => {
+          if(unifiedAlert) unifiedAlert.style.display = "none";
+          const modal = bootstrap.Modal.getInstance(document.getElementById("unifiedFormModal"));
+          if(modal) modal.hide();
+        }, 3000);
+      })
+      .catch(() => {
+        if(unifiedAlert){
+          unifiedAlert.className = "alert alert-danger";
+          unifiedAlert.textContent = "Une erreur est survenue, veuillez réessayer.";
+          unifiedAlert.style.display = "block";
+          setTimeout(() => { unifiedAlert.style.display = "none"; }, 5000);
+        }
+      });
+    });
+  }
+});
+</script>
+<!--js du formulaire d'adhésion-->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("membershipForm");
+    const alertBox = document.getElementById("membershipAlert");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      alertBox.style.display = "none";
+      alertBox.innerHTML = "";
+
+      const formData = new FormData(form);
+      formData.append("payAdhesion", document.getElementById("payAdhesion").checked);
+      formData.append("payCotisation", document.getElementById("payCotisation").checked);
+
+      try {
+        const response = await fetch("http://localhost:3000/api/membership", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          alertBox.style.display = "block";
+          alertBox.className = "alert alert-success";
+          alertBox.innerHTML = `✅ Formulaire envoyé avec succès !<br>Numéro d’adhésion : <strong>${result.numero}</strong>`;
+
+          if (result.paymentUrl) {
+            const payBtn = document.createElement("a");
+            payBtn.href = result.paymentUrl;
+            payBtn.target = "_blank";
+            payBtn.className = "btn btn-success mt-3";
+            payBtn.textContent = "Payer maintenant";
+            alertBox.appendChild(payBtn);
+          }
+
+          form.reset();
+        } else {
+          alertBox.style.display = "block";
+          alertBox.className = "alert alert-danger";
+          alertBox.innerHTML = "❌ Erreur : " + result.message;
+        }
+      } catch (error) {
+        console.error(error);
+        alertBox.style.display = "block";
+        alertBox.className = "alert alert-danger";
+        alertBox.innerHTML = "❌ Une erreur est survenue lors de l’envoi.";
+      }
+    });
+  });
+</script>
+<!--js du ticker-->
+
+<script>
+  fetch("http://localhost:3000/api/infos")
+    .then(res => res.json())
+    .then(messages => {
+      document.querySelector(".ticker-content").textContent = messages.join(" — ");
+    })
+    .catch(err => {
+      console.error("❌ Erreur chargement bande défilante :", err);
+    });
+</script>
+
+<script>
+document.addEventListener('hidden.bs.modal', function () {
+  // Toujours retirer la classe qui bloque le scroll
+  document.body.classList.remove('modal-open');
+  // Toujours rétablir le scroll
+  document.body.style.overflow = 'auto';
+  // Supprimer les backdrops restants
+  document.querySelectorAll('.modal-backdrop').forEach(el => el.remove());
+});
+</script>
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.get("open") === "reinsertion") {
+    const modal = new bootstrap.Modal(document.getElementById('reinsertionFormModal'));
+    modal.show();
+
+    // ✅ Nettoyer l’URL pour éviter la réouverture au rafraîchissement
+    const newUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, newUrl);
+  }
+</script>
+<script>
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get("open") === "membership") {
+    const modal = new bootstrap.Modal(document.getElementById("membershipFormModal"));
+    modal.show();
+
+    // ✅ Supprimer le paramètre de l’URL sans recharger la page
+    urlParams.delete("open");
+    const newUrl = window.location.pathname + (urlParams.toString() ? "?" + urlParams.toString() : "");
+    window.history.replaceState({}, document.title, newUrl);
+  }
+</script>
+
+</body>
+</html>

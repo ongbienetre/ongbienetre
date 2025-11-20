@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18="reinsertion.more.title">Réinsertion — ONG Bien-être</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="p-4">
+
+  <div class="container custom-max-width">
+    <h1 data-i18="reinsertion.more.title">Programme de Réinsertion</h1>
+    <p data-i18="reinsertion.more.text">
+      L’ONG Bien-être accompagne les jeunes déscolarisés, sans emploi, n'ayant pas de formation, et ceux ayant une formation et en quête d'emploi;
+       Vers une nouvelle vie. 
+      Nos programmes incluent des formations professionnelles adaptées, un accompagnement social et psychologique, 
+      ainsi qu’un suivi personnalisé pour favoriser une insertion durable dans le monde du travail.
+    </p>
+    <p>L'ONG; Offre la possibilité aux personnes enrôlers pour le Programme de réinsertion d'aussi adhérer et devenir membre de l'organisation et ainsi avoir plus d'avantages. En effet; Elle se charge des Adhérents; 
+L'adhésion est comme une assurance à l'ONG.
+Les adhérents bénéficient  d'une remise de 50% sur toutes les prestations de l'ONG à savoir  les consultations ,  les examens médicaux , la scolarité de formations proposées  par l'ONG et autres prestations.</p>
+
+    <h3>Conditions d'adhésion :(Pour devenir membre de l'ONG)</h3>
+        <ul class="list-unstyled mt-3">
+          <li class="mb-2"><strong>Associations ou personnes singulières</strong> : <span>droit  d'adhésion 5000 frs . Cotisation annuelle de 24.000 frs soit 2.000 frs par mois.</span></li>
+          <li class="mb-2"><strong data-i18="about.m2">Entreprises et sociétés</strong> : <span>droit d'adhésion 10.000 frs  , cotisation annuelle 60.000 frs soit 5.000 frs par mois.</span></li>
+        </ul>
+    <div class="mt-4 d-flex gap-2">
+      <a href="index.html" class="btn btn-primary" data-i18="reinsertion.more.back">Retour à l’accueil</a>
+      <a href="index.html?open=reinsertion" class="btn btn-success" data-i18="reinsertion.more.enroll">
+  Se faire enrôler
+</a>
+
+<script>
+  document.getElementById("enrollBtn").href = "index.html?open=reinsertion&lang=" + lang;
+</script>
+
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="i18n"></script><script>
+  
+  /* Language switcher */
+let = currentLang = 'fr';
+const setLang = (lang) => {
+  currentLang = lang;
+  document.querySelectorAll('[data-i18]').forEach(el=>{
+    const key = el.getAttribute('data-i18');
+    if(i18n[lang] && i18n[lang][key]) {
+      el.textContent = i18n[lang][key];
+    }
+  });
+  const lf = document.getElementById('langField');
+  if(lf) lf.value = lang;
+  const lf2 = document.getElementById('langFieldUnified');
+  if(lf2) lf2.value = lang;
+  document.documentElement.lang = (lang === 'fr') ? 'fr' : 'en';
+};
+document.querySelectorAll('.language-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.language-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setLang(btn.dataset.lang);
+  });
+});
+setLang('fr');
+const frBtn = document.querySelector('.language-btn[data-lang="fr"]');
+if(frBtn) frBtn.classList.add('active');
+  // Adapter les liens
+  document.querySelector("[data-i18='reinsertion.more.back']").href = "index.html?lang=" + lang;
+  document.getElementById("enrollBtn").href = "index.html?open=reinsertion&lang=" + lang + "#reinsertion";
+
+
+</script>
+
+  <script>
+    // ✅ Déclenche automatiquement le formulaire si on vient du bouton "Se faire enrôler"
+    if (window.location.hash === "#reinsertion") {
+      const modal = new bootstrap.Modal(document.getElementById('reinsertionFormModal'));
+      modal.show();
+    }
+  </script>
+</body>
+</html>

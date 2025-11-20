@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-i18="about.more.title">À propos — ONG Bien-être</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/site.css" rel="stylesheet">
+</head>
+<body class="p-4">
+  <div class="container content-container">
+    <h1 data-i18="about.more.title">À propos de l’ONG Bien-être</h1>
+    <p data-i18="about.more.text">
+      L’ONG Bien-être est née de la volonté de renforcer la résilience des communautés rurales et urbaines en Côte d’Ivoire. 
+      Nous développons des programmes intégrés de santé, de prévention et de réinsertion socio-professionnelle. 
+      Nos actions s’appuient sur des partenariats solides avec les institutions locales et internationales.
+    </p>
+
+    <div class="mt-4 d-flex gap-2">
+      <a href="index.html" class="btn btn-primary" data-i18="reinsertion.more.back">Retour à l’accueil</a>
+
+<script>
+  // Adapter le lien retour avec la langue active
+  document.getElementById("backHome").href = "index.html?lang=" + lang;
+</script>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="index.html/#i18n"></script><script>
+ 
+  /* Language switcher */
+let = currentLang = 'fr';
+const setLang = (lang) => {
+  currentLang = lang;
+  document.querySelectorAll('[data-i18]').forEach(el=>{
+    const key = el.getAttribute('data-i18');
+    if(i18n[lang] && i18n[lang][key]) {
+      el.textContent = i18n[lang][key];
+    }
+  });
+  const lf = document.getElementById('langField');
+  if(lf) lf.value = lang;
+  const lf2 = document.getElementById('langFieldUnified');
+  if(lf2) lf2.value = lang;
+  document.documentElement.lang = (lang === 'fr') ? 'fr' : 'en';
+};
+document.querySelectorAll('.language-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.language-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    setLang(btn.dataset.lang);
+  });
+});
+setLang('fr');
+const frBtn = document.querySelector('.language-btn[data-lang="fr"]');
+if(frBtn) frBtn.classList.add('active');
+
+  // Adapter le lien retour
+  document.getElementById("backHome").href = "index.html?lang=" + lang;
+
+</script>
+ <!-- ton script de traduction -->
+</body>
+</html>
