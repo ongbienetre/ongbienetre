@@ -1,6 +1,6 @@
 # 🌿 ONG Bien-Être — Site officiel
 
-Ce dépôt contient le site web complet de l'ONG Bien-Être, incluant le frontend public et le backend d'adhésion. Le projet vise à promouvoir les actions de l'ONG et faciliter l'inscription des membres en ligne.
+ongbienetre/ongbienetre est un dépôt spécial. Ce dépôt contient le site web complet de l'ONG Bien-Être, incluant le frontend public et le backend d'adhésion. Le projet vise à promouvoir les actions de l'ONG et faciliter l'inscription des membres en ligne.
 
 🔗 **Site en ligne** : [https://ongbienetre.org](https://ongbienetre.org) *(à venir)*
 
