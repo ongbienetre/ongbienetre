@@ -1374,7 +1374,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("payCotisation", document.getElementById("payCotisation").checked);
 
       try {
-        const response = await fetch("https://ongbienetre-4.onrender.com/...", {
+        const response = await fetch("https://api.ongbien-etre.org/api/membership", {
           method: "POST",
           body: formData,
         });
@@ -1413,7 +1413,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!--js du ticker-->
 
 <script>
-  fetch("http://localhost:3000/api/infos")
+  fetch("https://api.ongbien-etre.org/api/membership/api/infos")
     .then(res => res.json())
     .then(messages => {
       document.querySelector(".ticker-content").textContent = messages.join(" — ");
