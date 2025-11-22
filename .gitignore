@@ -2,3 +2,6 @@
 uploads/
 adherents/
 node_modules/
+*.psd
+*.mp4
+*.zip
