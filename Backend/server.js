@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 const upload = multer({ dest: "uploads/" });
 
 // Numérotation
-const numberFile = "last_number.txt";
+const numberFile = path.join(__dirname, "last_number.txt");
 let lastNumber = fs.existsSync(numberFile) ? parseInt(fs.readFileSync(numberFile)) : 0;
 
 // Route principale
@@ -28,6 +28,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
   try {
     console.log("📥 Données reçues :", req.body);
     console.log("📸 Fichier reçu :", req.file);
+
     lastNumber++;
     fs.writeFileSync(numberFile, lastNumber.toString());
 
@@ -50,21 +51,30 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
       nationalite: req.body.nationalite,
       niveau: req.body.niveau,
       motivation: req.body.motivation,
-      payAdhesion: Array.isArray(req.body.payAdhesion) ? req.body.payAdhesion.includes("true") : req.body.payAdhesion === "true",
-      payCotisation: Array.isArray(req.body.payCotisation) ? req.body.payCotisation.includes("true") : req.body.payCotisation === "true",
+      payAdhesion: req.body.payAdhesion === "true",
+      payCotisation: req.body.payCotisation === "true",
       photoPath: req.file?.path || null,
     };
 
-    const adherentPath = path.join(__dirname, "adherents", `${numero}.json`);
+    // 📂 Créer le dossier adherents si absent
+    const adherentsDir = path.join(__dirname, "adherents");
+    if (!fs.existsSync(adherentsDir)) fs.mkdirSync(adherentsDir);
+
+    const adherentPath = path.join(adherentsDir, `${numero}.json`);
     fs.writeFileSync(adherentPath, JSON.stringify(data, null, 2));
 
     // 📄 Générer le PDF
-    const pdfPath = path.join(__dirname, "adherents", `${numero}.pdf`);
+    const pdfPath = path.join(adherentsDir, `${numero}.pdf`);
     const pdfStream = fs.createWriteStream(pdfPath);
     const doc = new PDFDocument();
     doc.pipe(pdfStream);
 
-    doc.image("images/logo.png", 50, 40, { width: 80 }).moveDown(2);
+    // Logo avec chemin robuste
+    const logoPath = path.join(__dirname, "../images/logo.png");
+    if (fs.existsSync(logoPath)) {
+      doc.image(logoPath, 50, 40, { width: 80 }).moveDown(2);
+    }
+
     doc
       .font("Times-Bold")
       .fontSize(18)
@@ -121,6 +131,11 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
     pdfStream.on("finish", () => {
       console.log("📄 PDF terminé, envoi de l’email...");
 
+      if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+        console.error("❌ Variables EMAIL_USER ou EMAIL_PASS manquantes");
+        return;
+      }
+
       const transporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -135,14 +150,8 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
         subject: `Nouvelle adhésion : ${numero}`,
         text: `Un nouvel adhérent vient de s’inscrire.\nNuméro : ${numero}\nNom : ${data.nom} ${data.prenoms}`,
         attachments: [
-          {
-            filename: `${numero}.pdf`,
-            path: pdfPath,
-          },
-          {
-            filename: "photo.jpg",
-            path: data.photoPath,
-          },
+          { filename: `${numero}.pdf`, path: pdfPath },
+          ...(data.photoPath ? [{ filename: "photo.jpg", path: data.photoPath }] : []),
         ],
       };
 
@@ -159,19 +168,20 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
     let paymentUrl = null;
     if (data.payAdhesion || data.payCotisation) {
       const montant = (data.payAdhesion ? 5000 : 0) + (data.payCotisation ? 10000 : 0);
-      paymentUrl = `https://paiement.ongbienetre.org/initier?montant=${montant}&ref=${numero}`;
+      paymentUrl = `https://paiement.ongbien-etre.org/initier?montant=${montant}&ref=${numero}`;
     }
 
     console.log("✅ Réponse envoyée :", { numero, paymentUrl });
     res.json({ success: true, numero, paymentUrl });
   } catch (err) {
-    console.error(err);
+    console.error("❌ Erreur serveur :", err);
     res.json({ success: false, message: "Erreur serveur" });
   }
 });
 
+// Route infos.json
 app.get("/api/infos", (req, res) => {
-  const infosPath = path.join(__dirname, "infos.json");
+  const infosPath = path.join(__dirname, "../infos.json");
   try {
     const raw = fs.readFileSync(infosPath);
     const messages = JSON.parse(raw);
