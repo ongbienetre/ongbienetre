@@ -1370,8 +1370,8 @@ document.addEventListener("DOMContentLoaded", () => {
       alertBox.innerHTML = "";
 
       const formData = new FormData(form);
-      formData.append("payAdhesion", document.getElementById("payAdhesion").checked);
-      formData.append("payCotisation", document.getElementById("payCotisation").checked);
+      formData.append("payAdhesion", document.getElementById("payAdhesion").checked ? "true" : "false");
+      formData.append("payCotisation", document.getElementById("payCotisation").checked ? "true" : "false");
 
       try {
         const response = await fetch("https://api.ongbien-etre.org/api/membership", {
