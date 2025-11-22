@@ -1413,7 +1413,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!--js du ticker-->
 
 <script>
-  fetch("https://api.ongbien-etre.org/api/membership/api/infos")
+  fetch("https://api.ongbien-etre.org/api/infos")
     .then(res => res.json())
     .then(messages => {
       document.querySelector(".ticker-content").textContent = messages.join(" — ");
