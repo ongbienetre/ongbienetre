@@ -1374,7 +1374,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append("payCotisation", document.getElementById("payCotisation").checked);
 
       try {
-        const response = await fetch("http://localhost:3000/api/membership", {
+        const response = await fetch("https://ongbienetre-4.onrender.com/...", {
           method: "POST",
           body: formData,
         });
