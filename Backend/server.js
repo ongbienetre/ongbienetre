@@ -146,7 +146,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: "ongbienetre349@gmail.com",
+        to: process.env.EMAIL_USER,
         subject: `Nouvelle adhésion : ${numero}`,
         text: `Un nouvel adhérent vient de s’inscrire.\nNuméro : ${numero}\nNom : ${data.nom} ${data.prenoms}`,
         attachments: [
