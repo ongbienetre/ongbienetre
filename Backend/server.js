@@ -6,9 +6,11 @@ const fs = require("fs");
 const path = require("path");
 const PDFDocument = require("pdfkit");
 const nodemailer = require("nodemailer");
+const fetch = require("node-fetch");
+const { Pool } = require("pg");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(cors());
@@ -18,21 +20,23 @@ app.use(express.urlencoded({ extended: true }));
 // Upload config
 const upload = multer({ dest: "uploads/" });
 
-// Numérotation
-const numberFile = path.join(__dirname, "last_number.txt");
-let lastNumber = fs.existsSync(numberFile) ? parseInt(fs.readFileSync(numberFile)) : 0;
+// PostgreSQL pool
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }, // utile sur Render/Heroku
+});
 
-// Route principale
+// Fonction pour générer un numéro unique
+async function getNextNumero() {
+  const res = await pool.query("SELECT nextval('adherent_seq')");
+  return "M-" + String(res.rows[0].nextval).padStart(4, "0");
+}
+
+// Route principale : adhésion
 app.post("/api/membership", upload.single("photo"), async (req, res) => {
   console.log("✅ Route /api/membership appelée");
   try {
-    console.log("📥 Données reçues :", req.body);
-    console.log("📸 Fichier reçu :", req.file);
-
-    lastNumber++;
-    fs.writeFileSync(numberFile, lastNumber.toString());
-
-    const numero = "M-" + String(lastNumber).padStart(4, "0");
+    const numero = await getNextNumero();
 
     const data = {
       numero,
@@ -56,41 +60,24 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
       photoPath: req.file?.path || null,
     };
 
-    // 📂 Créer le dossier adherents si absent
+    // Sauvegarde JSON
     const adherentsDir = path.join(__dirname, "adherents");
     if (!fs.existsSync(adherentsDir)) fs.mkdirSync(adherentsDir);
-
     const adherentPath = path.join(adherentsDir, `${numero}.json`);
     fs.writeFileSync(adherentPath, JSON.stringify(data, null, 2));
 
-    // 📄 Générer le PDF
+    // Génération PDF
     const pdfPath = path.join(adherentsDir, `${numero}.pdf`);
     const pdfStream = fs.createWriteStream(pdfPath);
     const doc = new PDFDocument();
     doc.pipe(pdfStream);
 
-    // Logo avec chemin robuste
-    const logoPath = path.join(__dirname, "../images/logo.png");
-    if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, 50, 40, { width: 80 }).moveDown(2);
-    }
-
-    doc
-      .font("Times-Bold")
-      .fontSize(18)
-      .fillColor("#004aad")
+    doc.font("Times-Bold").fontSize(18).fillColor("#004aad")
       .text("FORMULAIRE D'ADHÉSION À L'ONG Bien-Être", { align: "center" })
       .moveDown(0.5)
-      .font("Times-Roman")
-      .fontSize(14)
-      .fillColor("black")
+      .font("Times-Roman").fontSize(14).fillColor("black")
       .text(`Bulletin d'adhésion N° : ${numero}`, { align: "center" })
       .moveDown(1);
-
-    doc.fontSize(18).text(`Fiche d’adhésion — ${numero}`, { align: "center" });
-    doc.moveDown();
-    doc.fontSize(14).fillColor("black").text("Informations personnelles", { underline: true });
-    doc.moveDown(0.5);
 
     const champs = [
       ["Nom", data.nom],
@@ -118,16 +105,12 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
     if (data.photoPath) {
       doc.addPage().fontSize(16).text("Photo de l’adhérent", { align: "center" });
       doc.moveDown();
-      doc.image(data.photoPath, {
-        fit: [250, 250],
-        align: "center",
-        valign: "center",
-      });
+      doc.image(data.photoPath, { fit: [250, 250], align: "center", valign: "center" });
     }
 
     doc.end();
 
-    // 📧 Envoi email après génération du PDF
+    // Envoi email après génération du PDF
     pdfStream.on("finish", () => {
       console.log("📄 PDF terminé, envoi de l’email...");
 
@@ -146,7 +129,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER,
+        to: process.env.EMAIL_USER, // ✅ tu peux mettre une autre adresse ici
         subject: `Nouvelle adhésion : ${numero}`,
         text: `Un nouvel adhérent vient de s’inscrire.\nNuméro : ${numero}\nNom : ${data.nom} ${data.prenoms}`,
         attachments: [
@@ -164,14 +147,39 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
       });
     });
 
-    // Paiement fictif
+    // Paiement CinetPay
     let paymentUrl = null;
     if (data.payAdhesion || data.payCotisation) {
       const montant = (data.payAdhesion ? 5000 : 0) + (data.payCotisation ? 10000 : 0);
-      paymentUrl = `https://paiement.ongbien-etre.org/initier?montant=${montant}&ref=${numero}`;
+
+      const payload = {
+        site_id: process.env.CINETPAY_SITE_ID,
+        api_key: process.env.CINETPAY_API_KEY,
+        transaction_id: numero,
+        amount: montant,
+        currency: "XOF",
+        description: "Adhésion ONG Bien-être",
+        return_url: process.env.CINETPAY_RETURN_URL,
+        cancel_url: process.env.CINETPAY_CANCEL_URL,
+        customer_name: data.nom,
+        customer_email: data.email,
+      };
+
+      try {
+        const response = await fetch("https://api-checkout.cinetpay.com/v2/payment", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        const result = await response.json();
+        if (result.code === "201") {
+          paymentUrl = result.data.payment_url;
+        }
+      } catch (err) {
+        console.error("❌ Erreur CinetPay :", err);
+      }
     }
 
-    console.log("✅ Réponse envoyée :", { numero, paymentUrl });
     res.json({ success: true, numero, paymentUrl });
   } catch (err) {
     console.error("❌ Erreur serveur :", err);
@@ -181,7 +189,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
 
 // Route infos.json
 app.get("/api/infos", (req, res) => {
-  const infosPath = path.join(__dirname, "../infos.json");
+  const infosPath = path.join(__dirname, "infos.json");
   try {
     const raw = fs.readFileSync(infosPath);
     const messages = JSON.parse(raw);
