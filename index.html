@@ -1409,6 +1409,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  // Quand la modale se ferme
+document.getElementById("membershipFormModal").addEventListener("hidden.bs.modal", () => {
+  document.getElementById("successMessage").textContent = "";
+  document.getElementById("membershipForm").reset();
+});
 </script>
 <!--js du ticker-->
 
