@@ -112,15 +112,18 @@
 
 .ticker-container {
   position: fixed;
-  bottom: 0;
+  bottom: 0; /* ✅ fixé en bas comme un bandeau TV */
   width: 100%;
-  background-color: #ffffff;
-  color: #000000;
+  background-color: #ffffff; /* fond noir premium */
+  color: #000000;            /* texte blanc */
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   overflow: hidden;
-  z-index: 999;
-  border-top: 1px solid #444;
+  z-index: 9999;          /* toujours au-dessus */
+  border-top: 2px solid #444;
+  height: 40px;           /* hauteur fixe comme un bandeau TV */
+  display: flex;
+  align-items: center;
 }
 
 .ticker {
@@ -132,9 +135,10 @@
   display: inline-block;
   white-space: nowrap;
   padding-left: 100%;
-  animation: ticker-scroll 50s linear infinite;
+  animation: ticker-scroll 30s linear infinite;
 }
 
+/* ✅ Animation du défilement */
 @keyframes ticker-scroll {
   0% {
     transform: translateX(0%);
@@ -142,6 +146,11 @@
   100% {
     transform: translateX(-100%);
   }
+}
+
+/* ✅ Pause au survol */
+.ticker-content:hover {
+  animation-play-state: paused;
 }
 
   </style>
@@ -1386,6 +1395,14 @@ document.addEventListener("DOMContentLoaded", () => {
           alertBox.style.display = "block";
           alertBox.className = "alert alert-success";
           alertBox.innerHTML = `✅ Formulaire envoyé avec succès !<br>Numéro d’adhésion : <strong>${result.numero}</strong>`;
+        
+        if (data.success) {
+           document.getElementById("errorMessage").innerText = "";
+           document.getElementById("membershipForm").reset();
+           alert("Adhésion envoyée avec succès !");
+        } else {
+           document.getElementById("errorMessage").innerText = "Erreur d’envoi";
+      }
 
           if (result.paymentUrl) {
             const payBtn = document.createElement("a");
@@ -1410,6 +1427,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const modal = document.getElementById("formModal");
+modal.addEventListener("hidden.bs.modal", () => {
+  document.getElementById("membershipForm").reset();
+  document.getElementById("errorMessage").innerText = "";
+});
 
   // Quand la modale se ferme
 document.getElementById("membershipFormModal").addEventListener("hidden.bs.modal", () => {
