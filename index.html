@@ -1428,7 +1428,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  const modal = document.getElementById("formModal");
+  const modal = document.getElementById("membershipFormModal");
 modal.addEventListener("hidden.bs.modal", () => {
   document.getElementById("membershipForm").reset();
   document.getElementById("errorMessage").innerText = "";
@@ -1486,6 +1486,11 @@ document.addEventListener('hidden.bs.modal', function () {
     window.history.replaceState({}, document.title, newUrl);
   }
 </script>
+<div class="ticker-container">
+  <div class="ticker">
+    <span class="ticker-content">Chargement des informations...</span>
+  </div>
+</div>
 
 </body>
 </html>
