@@ -131,7 +131,7 @@
   overflow: hidden;
   z-index: 9999;          /* toujours au-dessus */
   border-top: 2px solid #444;
-  height: 40px;           /* hauteur fixe comme un bandeau TV */
+  height: 30px;           /* hauteur fixe comme un bandeau TV */
   display: flex;
   align-items: center;
 }
@@ -927,7 +927,7 @@
             <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
           </div>
 
-          <div id="membershipAlert" class="mt-3" style="display:none;"></div>
+          <div id="membershipAlert" class="mt-3 d-none"></div>
         </form>
       </div>
     </div>
@@ -1378,6 +1378,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
+
+/* --- formulaire adhésion membre --- */
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("membershipForm");
@@ -1430,7 +1432,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Fetch ticker messages (optional endpoint)
-    fetch('/api/ticker')
+    fetch('/api/infos')
       .then(res => res.ok ? res.json() : Promise.reject('no-msg'))
       .then(messages => {
         if (messages && Array.isArray(messages) && messages.length) {
