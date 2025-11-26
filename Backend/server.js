@@ -188,7 +188,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
 });
 
 // Route infos.json
-app.get("/api/infos", (req, res) => {
+app.get('/api/infos.json', (req, res) => {
   const infosPath = path.join(__dirname, "infos.json");
   try {
     const raw = fs.readFileSync(infosPath);
