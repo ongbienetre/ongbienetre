@@ -32,23 +32,6 @@ Les adhérents bénéficient  d'une remise de 50% sur toutes les prestations de 
   Se faire enrôler
 </a>
 
-<div class="ticker-container">
-  <div class="ticker">
-    <span class="ticker-content">Chargement des informations...</span>
-  </div>
-</div>
-
-<script>
-  fetch("https://api.ongbien-etre.org/api/infos")
-    .then(res => res.json())
-    .then(messages => {
-      document.querySelector(".ticker-content").textContent = messages.join(" — ");
-    })
-    .catch(err => {
-      console.error("❌ Erreur chargement bande défilante :", err);
-    });
-</script>
-
 <script>
   document.getElementById("enrollBtn").href = "index.html?open=reinsertion&lang=" + lang;
 </script>

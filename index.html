@@ -52,6 +52,7 @@
     .social-follow { display:flex; align-items:center; gap:12px; }
     .social-follow .label { font-weight:600; color:var(--muted); margin-right:6px; }
     .social-icons a { display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:8px; background:transparent; text-decoration:none; color:inherit; transition:transform .15s ease; }
+    .social-icons a + a { margin-left: 8px; }
     .social-icons a:hover { transform:translateY(-4px); }
     .social-icons svg { width: var(--social-size); height: var(--social-size); display:block; }
 
@@ -82,6 +83,12 @@
     #formAlert {
       display: none;
     }
+    #unifiedAlert {
+      display: none;
+    }
+    #unifiedAlert2 {
+      display: none;
+    }
 
 .icône {
   position: absolute;
@@ -91,10 +98,13 @@
   height: 800px;
   background: url("images/icône.png") no-repeat bottom left;
   background-size: contain;
-  opacity: 100;
+  opacity: 1;
   pointer-events: none;
   z-index: 0;
-  a:focus-visible, button:focus-visible {
+}
+
+.icône a:focus-visible,
+.icône button:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
@@ -104,7 +114,7 @@
   .icône {
     width: 180px;
     height: 90px;
-    opacity: 100;
+    opacity: 1;
     bottom: -9600px;
     z-index: 0;
   }
@@ -239,6 +249,7 @@
       </div>
     </div>
   </div>
+</section>
 
 <!-- ACTIONS / FEATURES -->
 <section id="actions" class="section bg-white">
@@ -572,19 +583,18 @@
       <div class="d-flex align-items-center gap-3">
         <div class="social-follow">
           <div class="label" data-i18="footer.follow">Suivez-nous sur nos réseaux</div>
-          <div class="social-icons d-flex">
             <a href="https://facebook.com/yourpage" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook">
               <svg viewBox="0 0 24 24" fill="#1877F2" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                 <path d="M22 12.07C22 6.48 17.52 2 11.93 2S2 6.48 2 12.07C2 17.03 5.66 21.16 10.44 22v-7.02H7.9v-2.9h2.54V9.37c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.45h-1.25c-1.23 0-1.61.76-1.61 1.54v1.85h2.74l-.44 2.9h-2.3V22C18.34 21.16 22 17.03 22 12.07z"/>
               </svg>
             </a>
-            <a href="https://www.tiktok.com/@yourprofile" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok" style="margin-left:8px;">
+            <a href="https://www.tiktok.com/@yourprofile" target="_blank" rel="noopener" aria-label="TikTok" title="TikTok">
               <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                 <path d="M9 3h3.2a3 3 0 0 0 3-3v10.2a4.8 4.8 0 1 1-4.8-4.8V3H9V3z" fill="#000"/>
                 <path d="M20 7.2a4 4 0 0 1-2.6-1V14a6 6 0 1 1-6-6v1.2a4.8 4.8 0 1 0 4.8 4.8V6.3c.9.6 2 1 3.8.9V7.2z" fill="#EE1D52"/>
               </svg>
             </a>
-            <a href="https://www.linkedin.com/company/yourcompany" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn" style="margin-left:8px;">
+            <a href="https://www.linkedin.com/company/yourcompany" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
               <svg viewBox="0 0 24 24" fill="#0A66C2" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                 <path d="M20.45 20.45h-3.55v-5.44c0-1.3-.02-2.98-1.82-2.98-1.82 0-2.1 1.42-2.1 2.89v5.53H9.4V9h3.41v1.56h.05c.48-.9 1.66-1.82 3.42-1.82 3.66 0 4.34 2.41 4.34 5.55v6.17zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM6.98 20.45H3.7V9h3.28v11.45z"/>
               </svg>
@@ -593,7 +603,6 @@
         </div>
       </div>
     </div>
-  </div>
 </footer>
 
 <!-- WhatsApp floating -->
@@ -619,7 +628,7 @@
       </div>
       <div class="modal-body">
 
-        
+        <div id="unifiedAlert2" class="mt-3 d-none"></div>
 
         <!-- ✅ Zone de confirmation -->
         <div id="unifiedAlert" class="mt-3" style="display:none;"></div>
@@ -1151,7 +1160,7 @@ const i18n = {
 };
 
 /* Language switcher */
-let = currentLang = 'fr';
+let currentLang = 'fr';
 const setLang = (lang) => {
   currentLang = lang;
   document.querySelectorAll('[data-i18]').forEach(el=>{
@@ -1166,6 +1175,7 @@ const setLang = (lang) => {
   if(lf2) lf2.value = lang;
   document.documentElement.lang = (lang === 'fr') ? 'fr' : 'en';
 };
+
 document.querySelectorAll('.language-btn').forEach(btn=>{
   btn.addEventListener('click', ()=>{
     document.querySelectorAll('.language-btn').forEach(b=>b.classList.remove('active'));
@@ -1368,89 +1378,87 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 </script>
-<!--js du formulaire d'adhésion-->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("membershipForm");
     const alertBox = document.getElementById("membershipAlert");
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      alertBox.style.display = "none";
-      alertBox.innerHTML = "";
+    if (form) {
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        alertBox.style.display = "none";
+        alertBox.innerHTML = "";
 
-      const formData = new FormData(form);
-      formData.append("payAdhesion", document.getElementById("payAdhesion").checked ? "true" : "false");
-      formData.append("payCotisation", document.getElementById("payCotisation").checked ? "true" : "false");
+        const formData = new FormData(form);
+        formData.append("payAdhesion", document.getElementById("payAdhesion")?.checked ? "true" : "false");
+        formData.append("payCotisation", document.getElementById("payCotisation")?.checked ? "true" : "false");
 
-      try {
-        const response = await fetch("https://api.ongbien-etre.org/api/membership", {
-          method: "POST",
-          body: formData,
-        });
+        try {
+          const response = await fetch("https://api.ongbien-etre.org/api/membership", {
+            method: "POST",
+            body: formData,
+          });
+          const result = await response.json();
 
-        const result = await response.json();
+          if (result && result.success) {
+            alertBox.style.display = "block";
+            alertBox.className = "alert alert-success";
+            alertBox.innerHTML = `✅ Formulaire envoyé avec succès !<br>Numéro d’adhésion : <strong>${result.numero || ''}</strong>`;
 
-        if (result.success) {
-          alertBox.style.display = "block";
-          alertBox.className = "alert alert-success";
-          alertBox.innerHTML = `✅ Formulaire envoyé avec succès !<br>Numéro d’adhésion : <strong>${result.numero}</strong>`;
-        
-        if (data.success) {
-           document.getElementById("errorMessage").innerText = "";
-           document.getElementById("membershipForm").reset();
-           alert("Adhésion envoyée avec succès !");
-        } else {
-           document.getElementById("errorMessage").innerText = "Erreur d’envoi";
-      }
+            if (result.paymentUrl) {
+              const payBtn = document.createElement("a");
+              payBtn.href = result.paymentUrl;
+              payBtn.target = "_blank";
+              payBtn.className = "btn btn-success mt-3";
+              payBtn.textContent = "Payer maintenant";
+              alertBox.appendChild(payBtn);
+            }
 
-          if (result.paymentUrl) {
-            const payBtn = document.createElement("a");
-            payBtn.href = result.paymentUrl;
-            payBtn.target = "_blank";
-            payBtn.className = "btn btn-success mt-3";
-            payBtn.textContent = "Payer maintenant";
-            alertBox.appendChild(payBtn);
+            form.reset();
+          } else {
+            alertBox.style.display = "block";
+            alertBox.className = "alert alert-danger";
+            alertBox.innerHTML = "❌ Erreur : " + ((result && result.message) ? result.message : "Erreur inconnue");
           }
-
-          form.reset();
-        } else {
+        } catch (error) {
+          console.error(error);
           alertBox.style.display = "block";
           alertBox.className = "alert alert-danger";
-          alertBox.innerHTML = "❌ Erreur : " + result.message;
+          alertBox.innerHTML = "❌ Une erreur est survenue lors de l’envoi.";
         }
-      } catch (error) {
-        console.error(error);
-        alertBox.style.display = "block";
-        alertBox.className = "alert alert-danger";
-        alertBox.innerHTML = "❌ Une erreur est survenue lors de l’envoi.";
-      }
-    });
+      });
+    }
+
+    // Fetch ticker messages (optional endpoint)
+    fetch('/api/ticker')
+      .then(res => res.ok ? res.json() : Promise.reject('no-msg'))
+      .then(messages => {
+        if (messages && Array.isArray(messages) && messages.length) {
+          document.querySelectorAll('.ticker-content').forEach(el => {
+            el.textContent = messages.join(" — ");
+          });
+        }
+      })
+      .catch(err => {
+        console.warn("Ticker messages not available:", err);
+      });
   });
 
-  const modal = document.getElementById("membershipFormModal");
-modal.addEventListener("hidden.bs.modal", () => {
-  document.getElementById("membershipForm").reset();
-  document.getElementById("errorMessage").innerText = "";
-});
-
-  // Quand la modale se ferme
-document.getElementById("membershipFormModal").addEventListener("hidden.bs.modal", () => {
-  document.getElementById("successMessage").textContent = "";
-  document.getElementById("membershipForm").reset();
-});
-</script>
-<!--js du ticker-->
-
-<script>
-  fetch("https://api.ongbien-etre.org/api/infos")
-    .then(res => res.json())
-    .then(messages => {
-      document.querySelector(".ticker-content").textContent = messages.join(" — ");
-    })
-    .catch(err => {
-      console.error("❌ Erreur chargement bande défilante :", err);
+  // Ensure modal resets on hide
+  const membershipModal = document.getElementById("membershipFormModal");
+  if (membershipModal) {
+    membershipModal.addEventListener("hidden.bs.modal", () => {
+      const mForm = document.getElementById("membershipForm");
+      if (mForm) mForm.reset();
+      const err = document.getElementById("errorMessage");
+      if (err) err.innerText = "";
+      const succ = document.getElementById("successMessage");
+      if (succ) succ.textContent = "";
+      if (document.getElementById("membershipAlert")) {
+        document.getElementById("membershipAlert").style.display = "none";
+      }
     });
+  }
 </script>
 
 <script>
