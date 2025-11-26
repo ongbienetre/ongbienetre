@@ -1431,7 +1431,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Fetch ticker messages (optional endpoint)
-    fetch('/api/infos.json')
+    fetch('/Backend/infos')
       .then(res => res.ok ? res.json() : Promise.reject('no-msg'))
       .then(messages => {
         if (messages && Array.isArray(messages) && messages.length) {
