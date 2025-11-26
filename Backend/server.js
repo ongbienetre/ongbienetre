@@ -188,17 +188,17 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
 });
 
 // Route infos.json
-app.get('/Backend/infos', (req, res) => {
-  const infosPath = path.join(__dirname, "infos.json");
-  try {
-    const raw = fs.readFileSync(infosPath);
-    const messages = JSON.parse(raw);
-    res.json(messages);
-  } catch (err) {
-    console.error("❌ Erreur lecture infos.json :", err);
-    res.status(500).json({ error: "Impossible de charger les infos" });
-  }
-});
+//app.get('/Backend/infos', (req, res) => {
+  //const infosPath = path.join(__dirname, "infos.json");
+  //try {
+    //const raw = fs.readFileSync(infosPath);
+    //const messages = JSON.parse(raw);
+    //res.json(messages);
+  //} catch (err) {
+    //console.error("❌ Erreur lecture infos.json :", err);
+    //res.status(500).json({ error: "Impossible de charger les infos" });
+ // }
+//});
 
 app.listen(PORT, () => {
   console.log(`✅ Serveur lancé sur http://localhost:${PORT}`);
