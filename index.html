@@ -145,7 +145,7 @@
   display: inline-block;
   white-space: nowrap;
   padding-left: 100%;
-  animation: ticker-scroll 30s linear infinite;
+  animation: ticker-scroll 50s linear infinite;
 }
 
 /* ✅ Animation du défilement */
@@ -936,7 +936,7 @@
 
 <div class="ticker-container">
   <div class="ticker">
-    <div class="ticker-content">📢 Campagne de dons en cours -- 🗓️ Recrutement de 400 jeunes hommes en cours pour leur réinsertion professionnelle; ««Faite vous enrôlez dès maintenant !!!»» -- 🎓Centre de formation pour la couture ouverte. -- Votre centre Bien-être à Ahoué - quartier Maternité est ouvert et à votre service 24h/24 ; 7j/7. -- Les opportunités d'adhésion à l'ONG en tant que membre de l'organisation sont toujours ouvertes ; Alors dès maintenant Engagez-vous et Agissons ensemble. -- 💬 Rejoignez-nous sur nos réseaux sociaux !</div>
+    <div class="ticker-content">📢 Campagne de dons en cours; Faite un don! -- 🗓️ Recrutement de 400 jeunes hommes en cours pour leur réinsertion professionnelle; ««Faite vous enrôlez dès maintenant !!!»» -- 🎓Centre de formation pour la couture ouverte. -- Votre centre Bien-être à Ahoué - quartier Maternité est ouvert et à votre service 24h/24 ; 7j/7. -- Les opportunités d'adhésion à l'ONG en tant que membre de l'organisation sont toujours ouvertes ; Alors dès maintenant Engagez-vous et Agissons ensemble. -- 💬 Rejoignez-nous sur nos réseaux sociaux !</div>
   </div>
 </div>
 
@@ -1431,19 +1431,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Fetch ticker messages (optional endpoint)
-    fetch('/Backend/infos')
-      .then(res => res.ok ? res.json() : Promise.reject('no-msg'))
-      .then(messages => {
-        if (messages && Array.isArray(messages) && messages.length) {
-          document.querySelectorAll('.ticker-content').forEach(el => {
-            el.textContent = messages.join(" — ");
-          });
-        }
-      })
-      .catch(err => {
-        console.warn("Ticker messages not available:", err);
+    //fetch('/Backend/infos')
+      //.then(res => res.ok ? res.json() : Promise.reject('no-msg'))
+      //.then(messages => {
+        //if (messages && Array.isArray(messages) && messages.length) {
+          //document.querySelectorAll('.ticker-content').forEach(el => {
+            //el.textContent = messages.join(" — ");
+          //});
+        //}
+      //})
+      //.catch(err => {
+        //console.warn("Ticker messages not available:", err);
       });
-  });
+  //});
 
   // Ensure modal resets on hide
   const membershipModal = document.getElementById("membershipFormModal");
