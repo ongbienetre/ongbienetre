@@ -185,8 +185,8 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
     // ✅ Réponse toujours envoyée, même si CinetPay échoue
     res.json({ success: true, numero, paymentUrl });
   } catch (err) {
-    console.error("❌ Erreur serveur :", err);
-    res.json({ success: false, message: "Erreur serveur" });
+    console.error("❌ Erreur serveur :", err.message, err.stack);
+    res.json({ success: false, message: "Erreur serveur", details: err.message });
   }
 });
 
