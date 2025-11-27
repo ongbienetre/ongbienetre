@@ -147,7 +147,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
       });
     });
 
-    // Paiement CinetPay
+    // Paiement CinetPay (non bloquant)
     let paymentUrl = null;
     if (data.payAdhesion || data.payCotisation) {
       const montant = (data.payAdhesion ? 5000 : 0) + (data.payCotisation ? 10000 : 0);
@@ -174,12 +174,15 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
         const result = await response.json();
         if (result.code === "201") {
           paymentUrl = result.data.payment_url;
+        } else {
+          console.error("❌ Erreur CinetPay :", result);
         }
       } catch (err) {
         console.error("❌ Erreur CinetPay :", err);
       }
     }
 
+    // ✅ Réponse toujours envoyée, même si CinetPay échoue
     res.json({ success: true, numero, paymentUrl });
   } catch (err) {
     console.error("❌ Erreur serveur :", err);
