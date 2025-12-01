@@ -107,7 +107,8 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
       doc.moveDown();
       doc.image(data.photoPath, { fit: [250, 250], align: "center", valign: "center" });
     }
-
+    
+    console.log("📄 Génération PDF terminée, attente de l’événement finish...");
     doc.end();
 
     // Envoi email après génération du PDF
@@ -129,7 +130,7 @@ app.post("/api/membership", upload.single("photo"), async (req, res) => {
 
       const mailOptions = {
         from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER, // ✅ tu peux mettre une autre adresse ici
+        to: ["ongbienetre349@gmail.com", process.env.EMAIL_USER], // ✅ tu peux mettre une autre adresse ici
         subject: `Nouvelle adhésion : ${numero}`,
         text: `Un nouvel adhérent vient de s’inscrire.\nNuméro : ${numero}\nNom : ${data.nom} ${data.prenoms}`,
         attachments: [
