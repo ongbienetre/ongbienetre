@@ -176,8 +176,8 @@
 
 .icône {
   position: absolute;
-  bottom: -5700px;      /* distance depuis le bas */
-  right: 0px;
+  bottom: -8000px;      /* distance depuis le bas */
+  right: 20px;
   width: 500px;
   height: 800px;
   background: url("images/icône.png") no-repeat bottom left;
@@ -208,8 +208,8 @@
   position: fixed;
   bottom: 0; /* ✅ fixé en bas comme un bandeau TV */
   width: 100%;
-  background-color: #ffffff; /* fond noir premium */
-  color: #000000;            /* texte blanc */
+  background-color: #ff7b00; /* fond noir premium */
+  color: #ffffff;            /* texte blanc */
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   overflow: hidden;
@@ -229,7 +229,7 @@
   display: inline-block;
   white-space: nowrap;
   padding-left: 100%;
-  animation: ticker-scroll 50s linear infinite;
+  animation: ticker-scroll 60s linear infinite;
 }
 
 /* ✅ Animation du défilement */
@@ -245,6 +245,10 @@
 /* ✅ Pause au survol */
 .ticker-content:hover {
   animation-play-state: paused;
+}
+
+.map-frame {
+  border: 0;
 }
 
   </style>
@@ -346,7 +350,7 @@
     <div class="row g-4">
       <div class="col-md-6 col-lg-3">
         <div class="card card-feature p-3 h-100">
-          <img src="images/action1.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <img src="images/action1.jpg" loading="lazy" class="card-img-top rounded" alt="image action1">
           <div class="card-body">
             <h5 class="card-title" data-i18="actions.p1.title">Sensibilisation rurale</h5>
             <p class="card-text" data-i18="actions.p1.text">Ateliers locaux sur l’hygiène, la nutrition et la prévention des maladies.</p>
@@ -356,7 +360,7 @@
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-feature p-3 h-100">
-          <img src="images/action2.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <img src="images/action2.jpg" loading="lazy" class="card-img-top rounded" alt="image action2">
           <div class="card-body">
             <h5 class="card-title" data-i18="actions.p2.title">Accès aux soins</h5>
             <p class="card-text" data-i18="actions.p2.text">Cliniques mobiles, dépistages et partenariats locaux pour des soins accessibles.</p>
@@ -366,7 +370,7 @@
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-feature p-3 h-100">
-          <img src="images/action3.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <img src="images/action3.jpg" loading="lazy" class="card-img-top rounded" alt="image action3">
           <div class="card-body">
             <h5 class="card-title" data-i18="actions.p3.title">Formation des jeunes</h5>
             <p class="card-text" data-i18="actions.p3.text">Formations métiers pour renforcer l’employabilité et l’autonomie.</p>
@@ -377,7 +381,7 @@
 
       <div class="col-md-6 col-lg-3">
         <div class="card card-feature p-3 h-100">
-          <img src="images/action4.jpg" loading="lazy" class="card-img-top rounded" alt="">
+          <img src="images/action4.jpg" loading="lazy" class="card-img-top rounded" alt="image action4">
           <div class="card-body">
             <h5 class="card-title" data-i18="actions.p4.title">Dépistage</h5>
             <p class="card-text" data-i18="actions.p4.text">Campagnes régulières avec équipes médicales locales.</p>
@@ -387,6 +391,110 @@
     </div>
   </div>
 </section>
+
+<!-- REINSERTION -->
+<section id="reinsertion" class="section bg-light">
+  <div class="container max-width-container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+  <div id="reinsertionCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-inner rounded shadow">
+      <div class="carousel-item active">
+        <img src="images/reinsertion1.jpg" class="d-block w-100" alt="Réinsertion 1">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion2.jpg" class="d-block w-100" alt="Réinsertion 2">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion3.jpg" class="d-block w-100" alt="Réinsertion 3">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion4.jpg" class="d-block w-100" alt="Réinsertion 4">
+      </div>
+      <div class="carousel-item">
+        <img src="images/reinsertion5.jpg" class="d-block w-100" alt="Réinsertion 5">
+      </div>
+    </div>
+    <!-- Contrôles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#reinsertionCarousel" data-bs-slide="prev" title="Précédent" aria-label="Précédent">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Précédent</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#reinsertionCarousel" data-bs-slide="next" title="Suivant" aria-label="Suivant">
+      <span class="carousel-control-next-icon"></span>
+    </button>
+  </div>
+</div>
+
+      <div class="col-lg-6">
+        <h2 data-i18="reinsertion.title">Réinsertion</h2>
+        <p class="text-muted" data-i18="reinsertion.text">
+  L’ONG Bien-être accompagne les jeunes, femmes et hommes en difficulté vers une nouvelle vie.
+  Grâce à nos programmes de formation, d’accompagnement social et de suivi personnalisé,
+          nous redonnons une chance à chacun de s’intégrer durablement.
+</p><a class="btn btn-link mt-2" href="reinsertion-more.html" data-i18="reinsertion.more">En savoir plus</a>
+       <ul class="list-unstyled mb-4">
+         <li data-i18="reinsertion.li1">✔️ Formations professionnelles adaptées</li>
+         <li data-i18="reinsertion.li2">✔️ Accompagnement social et psychologique</li>
+         <li data-i18="reinsertion.li3">✔️ Suivi pour l’insertion dans le monde du travail</li>
+       </ul>     
+<button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#reinsertionFormModal" data-i18="reinsertion.enroll">
+  Se faire enrôler
+</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= Section Prévention ======= -->
+<section id="prevention" class="section bg-white">
+  <div class="container max-width-container">
+    <div class="section-title">
+      <h2>Prévention</h2>
+      <p>La prévention est au cœur de notre mission : informer, sensibiliser et accompagner les populations pour réduire les risques sanitaires et sociaux.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6 order-1 order-lg-2">
+        <img src="images/prevention.jpg" class="img-fluid" alt="Prévention ONG Bien-Être">
+      </div>
+      <div class="col-lg-6 pt-4 pt-lg-0 content order-2 order-lg-1">
+        <h3>Actions de Prévention</h3>
+        <ul>
+          <li><i class="bi bi-check-circle"></i> Sensibilisation contre les maladies transmissibles.</li>
+          <li><i class="bi bi-check-circle"></i> Visite médicale en milieu scolaire et professionnelle.</li>
+          <li><i class="bi bi-check-circle"></i> Formation en hygiène et sécurité sanitaire.</li>
+          <li><i class="bi bi-check-circle"></i> Campagnes de dépistages gratuits.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= Section Santé ======= -->
+<section id="sante" class="section bg-light">
+  <div class="container max-width-container">
+    <div class="section-title">
+      <h2>Santé</h2>
+      <p>Nos actions dans le domaine de la santé visent à améliorer l’accès aux soins, soutenir les structures médicales et promouvoir le bien-être des populations vulnérables.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <img src="images/sante.jpg" class="img-fluid" alt="Santé ONG Bien-Être">
+      </div>
+      <div class="col-lg-6 pt-4 pt-lg-0 content">
+        <h3>Initiatives Santé</h3>
+        <ul>
+          <li><i class="bi bi-check-circle"></i> Médecine générale , Diabétologie , Urologie , Cardiologie et Ophtalmologie.</li>
+          <li><i class="bi bi-check-circle"></i> Soutien aux centres de santé communautaires.</li>
+          <li><i class="bi bi-check-circle"></i> Distribution de kits sanitaires et médicaments essentiels.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 <!-- PARTNERS -->
 <section id="partners" class="section">
@@ -493,7 +601,6 @@
     </button>
   </div>
 </div>
-
       <div class="col-md-4 text-center">
         <div class="card p-4 h-100">
           <h5 class="mb-3" data-i18="donate.p3.title">Devenir bénévole</h5>
@@ -501,12 +608,73 @@
           <a href="#" class="btn btn-outline-success open-form" data-type="benevole" data-i18="donate.p3.cta">Devenir bénévole</a>
         </div>
       </div>
+
+      <div class="col-md-4 text-center">
+        <div class="card p-4 h-100">
+          <h5 class="mb-3" data-i18="donate.p5.title">Nos Besoins Prioritaires</h5>
+          <p class="text-muted mb-3" data-i18="donate.p5.text">Découvrez les besoins matériels et logistiques de l’ONG.</p>
+          <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#besoinFormModal" data-i18="donate.p5.cta">
+            Voir quelques besoins
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
+<!-- ======= Galerie ======= -->
+<section id="galerie" class="section bg-white">
+  <div class="container max-width-container">
+
+    <div class="section-title">
+      <h2>Galerie</h2>
+      <p>Découvrez en images et vidéos les actions et événements de l’ONG Bien-Être.</p>
+    </div>
+
+    <!-- Carrousel Photos -->
+    <div id="galerieCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
+      <div class="carousel-inner rounded shadow">
+        <div class="carousel-item active">
+          <img src="images/gallery1.jpg" class="d-block w-100" alt="Photo 1">
+        </div>
+        <div class="carousel-item">
+          <img src="images/gallery2.jpg" class="d-block w-100" alt="Photo 2">
+        </div>
+        <div class="carousel-item">
+          <img src="images/gallery3.jpg" class="d-block w-100" alt="Photo 3">
+        </div>
+      </div>
+      <!-- Contrôles -->
+      <!-- Bouton précédent -->
+<button class="carousel-control-prev" type="button" data-bs-target="#galerieCarousel" data-bs-slide="prev" aria-label="Image précédente">
+  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+</button>
+
+<!-- Bouton suivant -->
+<button class="carousel-control-next" type="button" data-bs-target="#galerieCarousel" data-bs-slide="next" aria-label="Image suivante">
+  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+</button>
+    </div>
+
+    <!-- Galerie Vidéos -->
+    <div class="row mt-5">
+      <div class="col-lg-6 mb-4">
+        <div class="ratio ratio-16x9">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID1" title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
+        </div>
+      </div>
+      <div class="col-lg-6 mb-4">
+        <div class="ratio ratio-16x9">
+          <iframe src="https://www.youtube.com/embed/VIDEO_ID2" title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- BLOG PREVIEW -->
-<section id="blog" class="section bg-white">
+<section id="blog" class="section bg-light">
   <div class="container max-width-container">
     <div class="text-center mb-4">
       <h2 data-i18="blog.title">Actualités</h2>
@@ -564,60 +732,30 @@ Nous réalisons :
   </div>
 </section>
 
-<!-- REINSERTION -->
-<section id="reinsertion" class="section bg-light">
+<!-- ======= Localisation ======= -->
+<section id="localisation" class="localisation section-bg">
   <div class="container max-width-container">
-    <div class="row align-items-center">
-      <div class="col-lg-6">
-  <div id="reinsertionCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
-    <div class="carousel-inner rounded shadow">
-      <div class="carousel-item active">
-        <img src="images/reinsertion1.jpg" class="d-block w-100" alt="Réinsertion 1">
-      </div>
-      <div class="carousel-item">
-        <img src="images/reinsertion2.jpg" class="d-block w-100" alt="Réinsertion 2">
-      </div>
-      <div class="carousel-item">
-        <img src="images/reinsertion3.jpg" class="d-block w-100" alt="Réinsertion 3">
-      </div>
-      <div class="carousel-item">
-        <img src="images/reinsertion4.jpg" class="d-block w-100" alt="Réinsertion 4">
-      </div>
-      <div class="carousel-item">
-        <img src="images/reinsertion5.jpg" class="d-block w-100" alt="Réinsertion 5">
-      </div>
-    </div>
-    <!-- Contrôles -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#reinsertionCarousel" data-bs-slide="prev" title="Précédent" aria-label="Précédent">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="visually-hidden">Précédent</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#reinsertionCarousel" data-bs-slide="next" title="Suivant" aria-label="Suivant">
-      <span class="carousel-control-next-icon"></span>
-    </button>
-  </div>
-</div>
 
-      <div class="col-lg-6">
-        <h2 data-i18="reinsertion.title">Réinsertion</h2>
-        <p class="text-muted" data-i18="reinsertion.text">
-  L’ONG Bien-être accompagne les jeunes, femmes et hommes en difficulté vers une nouvelle vie.
-  Grâce à nos programmes de formation, d’accompagnement social et de suivi personnalisé,
-          nous redonnons une chance à chacun de s’intégrer durablement.
-</p><a class="btn btn-link mt-2" href="reinsertion-more.html" data-i18="reinsertion.more">En savoir plus</a>
-       <ul class="list-unstyled mb-4">
-         <li data-i18="reinsertion.li1">✔️ Formations professionnelles adaptées</li>
-         <li data-i18="reinsertion.li2">✔️ Accompagnement social et psychologique</li>
-         <li data-i18="reinsertion.li3">✔️ Suivi pour l’insertion dans le monde du travail</li>
-       </ul>     
-<button class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#reinsertionFormModal" data-i18="reinsertion.enroll">
-  Se faire enrôler
-</button>
+    <div class="section-title">
+      <h2>Notre Localisation</h2>
+      <p>Retrouvez le siège de l’ONG Bien-Être sur la carte.</p>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-12">
+        <!-- Carte Google Maps -->
+        <div class="ratio ratio-16x9">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.123456789!2d-4.027!3d5.345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x123456789abcdef!2sONG%20Bien-Être!5e0!3m2!1sfr!2sci!4v1712345678901" 
+            width="50%" height="450" class="map-frame" allowfullscreen="" loading="lazy"
+            title="Carte de localisation du siège de l’ONG Bien-Être">
+          </iframe>
+        </div>
       </div>
     </div>
+
   </div>
 </section>
-
 
 <!-- CONTACT -->
 <section id="contact" class="section bg-light">
@@ -665,7 +803,7 @@ Nous réalisons :
           <h5 data-i18="contact.info">Informations</h5>
           <p class="mb-1"><strong>Adresse :</strong> Ahoué-Abidjan, Côte d'Ivoire</p>
           <p class="mb-1"><strong>Email :</strong> ongbienetre349@gmail.com</p>
-          <p class="mb-1"><strong>contact :</strong> +2250150632626 / 0769202011</p>
+          <p class="mb-1"><strong>contact :</strong>(+225) 0150632626 / 0769202011</p>
           <p class="mb-0"><strong>Horaires :</strong> 24h/24 * 7j/7</p>
         </div>
       </div>
@@ -673,7 +811,6 @@ Nous réalisons :
   </div>
 </section>
 <div class="icône"></div>
-
 
 
 <!-- FOOTER -->
@@ -1038,6 +1175,35 @@ Nous réalisons :
   </div>
 </div>
 
+<!-- Modal Besoins -->
+<div class="modal fade" id="besoinFormModal" tabindex="-1" aria-labelledby="besoinFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="besoinFormModalLabel">Liste des besoins prioritaires</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+
+      <div class="modal-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">🚑 Une ambulance pour les urgences et le transport sanitaire</li>
+          <li class="list-group-item">🏥 Plateaux techniques médicaux pour renforcer les centres de santé</li>
+          <li class="list-group-item">📦 Consommables sanitaires pour les campagnes et soins quotidiens</li>
+          <li class="list-group-item">❤️ Échographes portatifs pour améliorer le diagnostic en zones rurales</li>
+          <li class="list-group-item">🚌 Un mini-car pour le transport des jeunes en réinsertion</li>
+        </ul>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Pour la bande passante-->
 <div class="ticker-container">
   <div class="ticker">
     <div class="ticker-content">📢 Campagne de dons en cours; Faite un don! -- 🗓️ Recrutement de 400 jeunes hommes en cours pour leur réinsertion professionnelle; ««Faite vous enrôlez dès maintenant !!!»» -- 🎓Centre de formation pour la couture ouverte. -- Votre centre Bien-être à Ahoué - quartier Maternité est ouvert et à votre service 24h/24 ; 7j/7. -- Les opportunités d'adhésion à l'ONG en tant que membre de l'organisation sont toujours ouvertes ; Alors dès maintenant Engagez-vous et Agissons ensemble. -- 💬 Rejoignez-nous sur nos réseaux sociaux !</div>
@@ -1209,6 +1375,9 @@ const i18n = {
     "donate.p4.title": "Devenir membre",
     "donate.p4.text": "Adhérez pleinement à notre vision et participez activement à notre impact social.",
     "donate.p4.cta": "Devenir membre",
+    "donate.p5.title": "Nos Besoins Prioritaires",
+    "donate.p5.text": "Découvrez les besoins matériels et logistiques de l’ONG.",
+    "donate.p5.cta": "Voir quelques besoins",
     "blog.title":"Actualités","blog.lead":"Dernières nouvelles et ressources sur la santé et la prévention.","blog.post1.title":"Recrutement de 400 jeunes hommes : pour une réinsertion professionnelle","blog.post1.excerpt":"L'ONG Bien-être; dans sa mission de réinsertion proffessionnelle, lance un recrutement de 400 jeunes hommes pour des postes d'ouvriers d'usines à la zone industrielle. Pour en savoir plus, écrivez nous sur Whatsapp.","blog.post2.title":"Formation : témoignage d’un apprenant","blog.post2.excerpt":"Comment la formation professionnelle a changé la trajectoire d’un jeune.","blog.post3.title":"Prévention : gestes simples","blog.post3.excerpt":"Actions pratiques pour limiter les risques sanitaires dans vos communautés.",
     "reinsertion.title": "Réinsertion",
     "reinsertion.text": "L’ONG Bien-être accompagne les jeunes, femmes et hommes en difficulté vers une nouvelle vie. Grâce à nos programmes de formation, d’accompagnement social et de suivi personnalisé, nous redonnons une chance à chacun de s’intégrer durablement.",
@@ -1246,6 +1415,9 @@ const i18n = {
     "donate.p4.title": "Become a member",
     "donate.p4.text": "Fully embrace our vision and actively contribute to our social impact.",
     "donate.p4.cta": "Become a member",
+    "donate.p5.title": "Our Primary Needs",
+    "donate.p5.text": "Explore the material and logistical needs of ONG.",
+    "donate.p5.cta": "View some needs",
     "blog.title":"News","blog.lead":"Latest updates and resources on health and prevention.","blog.post1.title":"Recruitment of 400 young men: for professional reintegration","blog.post1.excerpt":"Bien-être ONG, as part of its professional reintegration mission, is recruiting 400 young men for factory worker positions in the industrial zone. For more information, please massage us on Whatsapp.","blog.post2.title":"Training: a learner's testimony","blog.post2.excerpt":"How vocational training changed one young person's trajectory.","blog.post3.title":"Prevention: simple actions","blog.post3.excerpt":"Practical actions to reduce health risks in your communities.",
     "reinsertion.title": "Reintegration",
     "reinsertion.text": "ONG Bien-être supports young people, women, and men in difficulty towards a new life. Through our training programs, social support, and personalized follow-up, we give everyone a chance to reintegrate sustainably.",
