@@ -11,21 +11,21 @@
     :root{
       --green:#28a745;
       --blue:#004aad;
-      --muted:#6c757d;
+      --muted:#575e65;
       --max-width:1100px;
       --cta-gradient: linear-gradient(90deg,var(--green),var(--blue));
       --social-size: 22px;
     }
     html { scroll-behavior: smooth; }
     body{
-      font-family: "Montserrat", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      font-family: "Montserrat bold", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
       color:#222;
       background:#fff;
     }
 
     .navbar { background: #ffffffcc; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
     .navbar-brand { gap: .5rem; align-items: center; display:flex; }
-    .brand-logo{ height: clamp(100px, 8vw, 200px); width: auto; margin-right: 10px; display: block; object-fit: contain; }
+    .brand-logo{ height: clamp(100px, 8vw, 200px); width: auto; margin-right: 3px; display: block; object-fit: contain; }
     @media (max-width:420px){ .brand-logo{ height: clamp(80px, 10vw, 60px); margin-right:8px; } }
 
     .section{ padding: 60px 0; }
@@ -64,10 +64,10 @@
 }
 
 .slide {
-  position: absolute;
+  position: relative;
   width: 100%;
   height: 100%;
-  opacity: 0;
+  opacity: 100;
   transition: opacity 1s ease-in-out;
 }
 
@@ -79,7 +79,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.7;
+  opacity: 100;
 }
 
 .caption {
@@ -249,6 +249,129 @@
 
 .map-frame {
   border: 0;
+}
+
+.gallery-slider {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.gallery-slide-track {
+  display: flex;
+  animation: gallery-scroll 40s linear infinite;
+}
+
+.gallery-slide {
+  width: 250px;
+  margin: 0 15px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.gallery-slide img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.gallery-caption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+@keyframes gallery-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+
+.gallery-wrapper {
+  position: relative;
+}
+
+.gallery-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.gallery-btn.prev {
+  left: 10px;
+}
+
+.gallery-btn.next {
+  right: 10px;
+}
+
+.gallery-btn:hover {
+  background: rgba(0,0,0,0.8);
+}
+
+.video-wrapper {
+  position: relative;
+}
+
+.video-slider {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+}
+
+.video-slide-track {
+  display: flex;
+  animation: video-scroll 60s linear infinite;
+}
+
+.video-slide {
+  width: 400px; /* largeur fixe pour chaque vidéo */
+  margin: 0 15px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.video-caption {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #333;
+}
+
+.video-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+.video-btn.prev {
+  left: 10px;
+}
+
+.video-btn.next {
+  right: 10px;
+}
+
+.video-btn:hover {
+  background: rgba(0,0,0,0.8);
+}
+
+@keyframes video-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
   </style>
@@ -631,43 +754,70 @@
       <p>Découvrez en images et vidéos les actions et événements de l’ONG Bien-Être.</p>
     </div>
 
-    <!-- Carrousel Photos -->
-    <div id="galerieCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="4000">
-      <div class="carousel-inner rounded shadow">
-        <div class="carousel-item active">
-          <img src="images/gallery1.jpg" class="d-block w-100" alt="Photo 1">
-        </div>
-        <div class="carousel-item">
-          <img src="images/gallery2.jpg" class="d-block w-100" alt="Photo 2">
-        </div>
-        <div class="carousel-item">
-          <img src="images/gallery3.jpg" class="d-block w-100" alt="Photo 3">
+    <div class="gallery-wrapper">
+      <!-- Bouton précédent -->
+      <button class="gallery-btn prev" aria-label="Précédent">&#10094;</button>
+
+      <!-- Galerie défilante -->
+      <div class="gallery-slider">
+        <div class="gallery-slide-track">
+          <div class="gallery-slide">
+            <img src="images/gallery1.jpg" alt="Campagne de sensibilisation">
+            <p class="gallery-caption">Campagne de sensibilisation</p>
+          </div>
+          <div class="gallery-slide">
+            <img src="images/gallery2.jpg" alt="Formation des jeunes">
+            <p class="gallery-caption">Formation des jeunes</p>
+          </div>
+          <div class="gallery-slide">
+            <img src="images/gallery3.jpg" alt="Distribution de kits sanitaires">
+            <p class="gallery-caption">Distribution de kits sanitaires</p>
+          </div>
+          <!-- Ajoute autant d’images que nécessaire -->
         </div>
       </div>
-      <!-- Contrôles -->
-      <!-- Bouton précédent -->
-<button class="carousel-control-prev" type="button" data-bs-target="#galerieCarousel" data-bs-slide="prev" aria-label="Image précédente">
-  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-</button>
 
-<!-- Bouton suivant -->
-<button class="carousel-control-next" type="button" data-bs-target="#galerieCarousel" data-bs-slide="next" aria-label="Image suivante">
-  <span class="carousel-control-next-icon" aria-hidden="true"></span>
-</button>
+      <!-- Bouton suivant -->
+      <button class="gallery-btn next" aria-label="Suivant">&#10095;</button>
     </div>
 
     <!-- Galerie Vidéos -->
-    <div class="row mt-5">
-      <div class="col-lg-6 mb-4">
-        <div class="ratio ratio-16x9">
-          <iframe src="https://www.youtube.com/embed/VIDEO_ID1" title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
+    <div class="video-wrapper">
+      <!-- Bouton précédent -->
+      <button class="video-btn prev" aria-label="Précédent">&#10094;</button>
+
+      <!-- Slider vidéos -->
+      <div class="video-slider">
+        <div class="video-slide-track">
+          <div class="video-slide">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/VIDEO_ID1" 
+                      title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
+            </div>
+            <p class="video-caption">Présentation de l’ONG</p>
+          </div>
+
+          <div class="video-slide">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/VIDEO_ID2" 
+                      title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
+            </div>
+            <p class="video-caption">Campagne de sensibilisation</p>
+          </div>
+
+          <div class="video-slide">
+            <div class="ratio ratio-16x9">
+              <iframe src="https://www.youtube.com/embed/VIDEO_ID3" 
+                      title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
+            </div>
+            <p class="video-caption">Formation des jeunes</p>
+          </div>
+          <!-- Ajoute autant de vidéos que nécessaire -->
         </div>
       </div>
-      <div class="col-lg-6 mb-4">
-        <div class="ratio ratio-16x9">
-          <iframe src="https://www.youtube.com/embed/VIDEO_ID2" title="Vidéo ONG Bien-Être" allowfullscreen></iframe>
-        </div>
-      </div>
+
+      <!-- Bouton suivant -->
+      <button class="video-btn next" aria-label="Suivant">&#10095;</button>
     </div>
 
   </div>
@@ -746,7 +896,7 @@ Nous réalisons :
         <!-- Carte Google Maps -->
         <div class="ratio ratio-16x9">
           <iframe 
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.123456789!2d-4.027!3d5.345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x123456789abcdef!2sONG%20Bien-Être!5e0!3m2!1sfr!2sci!4v1712345678901" 
+            src="https://www.google.com/maps/d/embed?mid=1fJMNnU8dg-GxBCS4PyR99JjfMZUHSeI&ehbc=2E312F" 
             width="50%" height="450" class="map-frame" allowfullscreen="" loading="lazy"
             title="Carte de localisation du siège de l’ONG Bien-Être">
           </iframe>
@@ -1796,6 +1946,46 @@ document.addEventListener('hidden.bs.modal', function () {
 
   startSlider();
 </script>
+
+<script>
+  const track = document.querySelector('.gallery-slide-track');
+  const prevBtn = document.querySelector('.gallery-btn.prev');
+  const nextBtn = document.querySelector('.gallery-btn.next');
+
+  let scrollAmount = 0;
+  const scrollStep = 300; // distance en pixels par clic
+
+  prevBtn.addEventListener('click', () => {
+    scrollAmount -= scrollStep;
+    track.style.transform = `translateX(${scrollAmount}px)`;
+  });
+
+  nextBtn.addEventListener('click', () => {
+    scrollAmount += scrollStep;
+    track.style.transform = `translateX(${scrollAmount}px)`;
+  });
+</script>
+
+<script>
+  const videoTrack = document.querySelector('.video-slide-track');
+  const videoPrevBtn = document.querySelector('.video-btn.prev');
+  const videoNextBtn = document.querySelector('.video-btn.next');
+
+  let videoScrollAmount = 0;
+  const videoScrollStep = 450; // distance en pixels par clic
+
+  videoPrevBtn.addEventListener('click', () => {
+    videoScrollAmount -= videoScrollStep;
+    videoTrack.style.transform = `translateX(${videoScrollAmount}px)`;
+  });
+
+  videoNextBtn.addEventListener('click', () => {
+    videoScrollAmount += videoScrollStep;
+    videoTrack.style.transform = `translateX(${videoScrollAmount}px)`;
+  });
+</script>
+
+
 
 <script>
   const params = new URLSearchParams(window.location.search);
