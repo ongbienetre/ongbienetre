@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administration — ONG Bien-être</title>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green:#1a9e5c; --green-dark:#127a45; --green-light:#e8f7f0;
+      --blue:#004aad; --blue-dark:#003580; --blue-light:#e8f0fb;
+      --red:#dc3545; --red-light:#fdecea;
+      --gold:#e8a020; --gold-light:#fef9e7;
+      --muted:#6b7280; --text:#1a1f2e; --bg:#f4f6fb; --card:#fff;
+      --border:rgba(0,0,0,0.08); --radius:14px;
+      --shadow:0 4px 20px rgba(0,0,0,0.07);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* ── Login ── */
+    #loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,var(--blue-dark),var(--blue),var(--green-dark));display:flex;align-items:center;justify-content:center;z-index:9999}
+    .login-box{background:#fff;border-radius:20px;padding:48px 40px;width:360px;box-shadow:0 20px 60px rgba(0,0,0,0.3);text-align:center}
+    .login-logo{width:80px;height:80px;object-fit:contain;margin-bottom:20px}
+    .login-title{font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:6px}
+    .login-sub{font-size:.85rem;color:var(--muted);margin-bottom:28px}
+    .login-input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:.95rem;font-family:inherit;outline:none;transition:border-color .2s;margin-bottom:16px}
+    .login-input:focus{border-color:var(--green)}
+    .login-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--green),var(--blue));color:#fff;border:none;border-radius:50px;font-size:1rem;font-weight:600;cursor:pointer;transition:.3s}
+    .login-btn:hover{opacity:.9;transform:translateY(-1px)}
+    .login-err{color:var(--red);font-size:.85rem;margin-top:10px;display:none}
+
+    /* ── Layout ── */
+    #app{display:none}
+    .sidebar{position:fixed;top:0;left:0;width:240px;height:100vh;background:var(--text);overflow-y:auto;z-index:100;display:flex;flex-direction:column}
+    .sidebar-logo{padding:24px 20px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.1)}
+    .sidebar-logo img{width:40px;height:40px;object-fit:contain}
+    .sidebar-logo span{color:#fff;font-weight:700;font-size:.95rem;line-height:1.2}
+    .sidebar-label{padding:20px 20px 8px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,0.35)}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;color:rgba(255,255,255,0.7);text-decoration:none;font-size:.875rem;font-weight:500;border-radius:8px;margin:1px 8px;cursor:pointer;transition:.2s;border:none;background:none;width:calc(100% - 16px);text-align:left}
+    .nav-item:hover{background:rgba(255,255,255,0.08);color:#fff}
+    .nav-item.active{background:var(--green);color:#fff}
+    .nav-item .icon{width:18px;height:18px;flex-shrink:0}
+    .sidebar-footer{margin-top:auto;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1)}
+    .logout-btn{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.5);font-size:.82rem;cursor:pointer;background:none;border:none;padding:0;transition:color .2s}
+    .logout-btn:hover{color:#fff}
+
+    .main{margin-left:240px;padding:28px;min-height:100vh}
+    .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px}
+    .page-title-bar{font-size:1.5rem;font-weight:700;color:var(--text)}
+    .save-btn{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,var(--green),var(--blue));color:#fff;border:none;border-radius:50px;padding:10px 22px;font-size:.88rem;font-weight:600;cursor:pointer;transition:.3s;box-shadow:0 4px 16px rgba(26,158,92,.3)}
+    .save-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,158,92,.4)}
+    .save-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+    /* ── Cards ── */
+    .card{background:var(--card);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow);margin-bottom:20px;border:1px solid var(--border)}
+    .card-title{font-size:1rem;font-weight:700;color:var(--text);margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+    .card-title .badge{background:var(--green-light);color:var(--green);font-size:.72rem;padding:3px 10px;border-radius:20px;font-weight:600}
+
+    /* ── Form elements ── */
+    .form-group{margin-bottom:16px}
+    label.fl{display:block;font-size:.78rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+    input.fi,textarea.fi,select.fi{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.9rem;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;background:#fff;color:var(--text)}
+    input.fi:focus,textarea.fi:focus,select.fi:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(26,158,92,.1)}
+    textarea.fi{resize:vertical;min-height:80px}
+    .fi-hint{font-size:.75rem;color:var(--muted);margin-top:4px}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+    /* ── Image upload ── */
+    .img-upload-area{border:2px dashed var(--border);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:.3s;position:relative;overflow:hidden}
+    .img-upload-area:hover{border-color:var(--green);background:var(--green-light)}
+    .img-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    .img-upload-area .preview{width:100%;max-height:180px;object-fit:cover;border-radius:8px;margin-top:12px;display:none}
+    .img-upload-area .up-label{font-size:.88rem;color:var(--muted)}
+    .img-upload-area .up-icon{font-size:2rem;margin-bottom:8px}
+
+    /* ── Ticker items ── */
+    .ticker-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;background:var(--bg)}
+    .ticker-item input{flex:1;border:none;background:transparent;font-size:.9rem;font-family:inherit;outline:none;color:var(--text)}
+    .ticker-del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:4px;border-radius:6px;transition:.2s}
+    .ticker-del:hover{background:var(--red-light);color:var(--red)}
+    .add-ticker{display:inline-flex;align-items:center;gap:6px;background:var(--green-light);color:var(--green);border:1px solid var(--green);border-radius:50px;padding:7px 16px;font-size:.82rem;font-weight:600;cursor:pointer;margin-top:8px;transition:.2s}
+    .add-ticker:hover{background:var(--green);color:#fff}
+
+    /* ── Sections nav ── */
+    .tab-bar{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+    .tab-btn{padding:8px 18px;border-radius:50px;border:1.5px solid var(--border);background:#fff;font-size:.85rem;font-weight:500;cursor:pointer;transition:.2s;color:var(--muted)}
+    .tab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .tab-pane{display:none}
+    .tab-pane.active{display:block}
+
+    /* ── Feedback ── */
+    .toast{position:fixed;bottom:24px;right:24px;background:#fff;border-radius:12px;padding:14px 20px;box-shadow:0 8px 32px rgba(0,0,0,0.15);font-size:.88rem;display:flex;align-items:center;gap:10px;z-index:9998;transform:translateY(80px);opacity:0;transition:.4s;max-width:340px}
+    .toast.show{transform:none;opacity:1}
+    .toast.success{border-left:4px solid var(--green)}
+    .toast.error{border-left:4px solid var(--red)}
+
+    /* ── Stats ── */
+    .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+    .stat-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);text-align:center}
+    .stat-num{font-size:2rem;font-weight:700;color:var(--text);line-height:1}
+    .stat-label{font-size:.78rem;color:var(--muted);margin-top:6px}
+
+    /* Responsive */
+    @media(max-width:768px){
+      .sidebar{width:100%;height:auto;position:relative}
+      .main{margin-left:0;padding:16px}
+      .row2,.row3{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── LOGIN ── -->
+<div id="loginScreen">
+  <div class="login-box">
+    <img src="images/logo.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+    <div class="login-title">Administration</div>
+    <div class="login-sub">ONG Bien-être — Accès sécurisé</div>
+    <input type="password" id="adminPassword" class="login-input" placeholder="Mot de passe administrateur" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Connexion</button>
+    <div class="login-err" id="loginErr">Mot de passe incorrect.</div>
+  </div>
+</div>
+
+<!-- ── APP ── -->
+<div id="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="images/logo.png" alt="Logo" onerror="this.style.display='none'">
+      <span>ONG Bien-être<br><small style="font-weight:400;opacity:.7">Administration</small></span>
+    </div>
+
+    <div class="sidebar-label">Navigation</div>
+    <button class="nav-item active" onclick="showTab('dashboard')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Tableau de bord
+    </button>
+    <button class="nav-item" onclick="showTab('textes')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+      Textes du site
+    </button>
+    <button class="nav-item" onclick="showTab('contact-info')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 8l7.89 5.26a2 2 0 0 0 2.22 0L21 8M5 19h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2z"/></svg>
+      Informations contact
+    </button>
+    <button class="nav-item" onclick="showTab('images')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+      Images
+    </button>
+    <button class="nav-item" onclick="showTab('ticker')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+      Ruban d'annonces
+    </button>
+    <button class="nav-item" onclick="showTab('blog')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      Blog / Actualités
+    </button>
+    <button class="nav-item" onclick="showTab('temoignages')">
+      <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Témoignages
+    </button>
+
+    <div class="sidebar-footer">
+      <button class="logout-btn" onclick="doLogout()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Se déconnecter
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Dashboard -->
+    <div id="tab-dashboard" class="tab-pane active">
+      <div class="topbar">
+        <div class="page-title-bar">Tableau de bord</div>
+        <a href="index.html" target="_blank" style="font-size:.85rem;color:var(--green);text-decoration:none;font-weight:600">↗ Voir le site</a>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statSections">9</div><div class="stat-label">Sections du site</div></div>
+        <div class="stat-card"><div class="stat-num" id="statImages">—</div><div class="stat-label">Images gérées</div></div>
+        <div class="stat-card"><div class="stat-num" id="statTicker">—</div><div class="stat-label">Messages du ruban</div></div>
+        <div class="stat-card"><div class="stat-num" id="statBlog">—</div><div class="stat-label">Articles de blog</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">ℹ️ Guide d'utilisation</div>
+        <p style="font-size:.9rem;color:var(--muted);line-height:1.8">
+          Utilisez les sections dans le menu de gauche pour modifier le contenu du site :<br><br>
+          • <strong>Textes du site</strong> — Modifiez les titres, descriptions et sous-titres de chaque section.<br>
+          • <strong>Informations contact</strong> — Adresse, téléphone, email, horaires.<br>
+          • <strong>Images</strong> — Remplacez les photos du héro, galerie, sections, etc.<br>
+          • <strong>Ruban d'annonces</strong> — Gérez les messages défilants en bas du site.<br>
+          • <strong>Blog / Actualités</strong> — Ajoutez et modifiez les articles.<br>
+          • <strong>Témoignages</strong> — Gérez les témoignages affichés sur le site.<br><br>
+          Cliquez <strong>Enregistrer</strong> après chaque modification.
+        </p>
+      </div>
+    </div>
+
+    <!-- Textes -->
+    <div id="tab-textes" class="tab-pane">
+      <div class="topbar">
+        <div class="page-title-bar">Textes du site</div>
+        <button class="save-btn" onclick="saveSection('textes')">💾 Enregistrer</button>
+      </div>
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="showSubTab(this,'hero')">Héro</button>
+        <button class="tab-btn" onclick="showSubTab(this,'about')">À propos</button>
+        <button class="tab-btn" onclick="showSubTab(this,'actions')">Nos actions</button>
+        <button class="tab-btn" onclick="showSubTab(this,'reinsertion')">Réinsertion</button>
+        <button class="tab-btn" onclick="showSubTab(this,'vision')">Vision 2030</button>
+        <button class="tab-btn" onclick="showSubTab(this,'donate')">Soutenez-nous</button>
+      </div>
+
+      <div id="sub-hero" class="card sub-pane">
+        <div class="card-title">🦸 Section Héro <span class="badge">Page d'accueil</span></div>
+        <div class="form-group"><label class="fl">Titre principal</label><input class="fi" id="hero_title" placeholder="ONG Bien-être — Votre bien-être, notre priorité"></div>
+        <div class="form-group"><label class="fl">Sous-titre</label><textarea class="fi" id="hero_subtitle" rows="2" placeholder="Nous œuvrons pour la réinsertion..."></textarea></div>
+        <div class="form-group"><label class="fl">Badge (texte du bandeau)</label><input class="fi" id="hero_badge" placeholder="Ahoué-Abidjan, Côte d'Ivoire"></div>
+        <div class="row3">
+          <div class="form-group"><label class="fl">Stat 1 (chiffre)</label><input class="fi" id="hero_stat1_num" placeholder="400+"></div>
+          <div class="form-group"><label class="fl">Stat 1 (label)</label><input class="fi" id="hero_stat1_label" placeholder="Jeunes en réinsertion"></div>
+        </div>
+        <div class="row3">
+          <div class="form-group"><label class="fl">Stat 2 (chiffre)</label><input class="fi" id="hero_stat2_num" placeholder="5 000"></div>
+          <div class="form-group"><label class="fl">Stat 2 (label)</label><input class="fi" id="hero_stat2_label" placeholder="Objectif formations 2030"></div>
+        </div>
+      </div>
+
+      <div id="sub-about" class="card sub-pane" style="display:none">
+        <div class="card-title">👥 Section À propos</div>
+        <div class="form-group"><label class="fl">Titre</label><input class="fi" id="about_title" placeholder="À propos de l'ONG Bien-être"></div>
+        <div class="form-group"><label class="fl">Description</label><textarea class="fi" id="about_lead" rows="3"></textarea></div>
+        <div class="row2">
+          <div class="form-group"><label class="fl">Pilier 1 — Santé (description)</label><input class="fi" id="about_m1_desc"></div>
+          <div class="form-group"><label class="fl">Pilier 2 — Prévention (description)</label><input class="fi" id="about_m2_desc"></div>
+        </div>
+        <div class="form-group"><label class="fl">Pilier 3 — Réinsertion (description)</label><input class="fi" id="about_m3_desc"></div>
+      </div>
+
+      <div id="sub-actions" class="card sub-pane" style="display:none">
+        <div class="card-title">🎯 Section Nos actions</div>
+        <div class="form-group"><label class="fl">Titre de la section</label><input class="fi" id="actions_title" placeholder="Nos actions"></div>
+        <div class="form-group"><label class="fl">Description</label><input class="fi" id="actions_lead"></div>
+        <div class="row2">
+          <div class="form-group"><label class="fl">Action 1 — Titre</label><input class="fi" id="a1_title" placeholder="Sensibilisation rurale"></div>
+          <div class="form-group"><label class="fl">Action 1 — Description</label><input class="fi" id="a1_text"></div>
+          <div class="form-group"><label class="fl">Action 2 — Titre</label><input class="fi" id="a2_title" placeholder="Accès aux soins"></div>
+          <div class="form-group"><label class="fl">Action 2 — Description</label><input class="fi" id="a2_text"></div>
+          <div class="form-group"><label class="fl">Action 3 — Titre</label><input class="fi" id="a3_title" placeholder="Formation des jeunes"></div>
+          <div class="form-group"><label class="fl">Action 3 — Description</label><input class="fi" id="a3_text"></div>
+          <div class="form-group"><label class="fl">Action 4 — Titre</label><input class="fi" id="a4_title" placeholder="Dépistage"></div>
+          <div class="form-group"><label class="fl">Action 4 — Description</label><input class="fi" id="a4_text"></div>
+        </div>
+      </div>
+
+      <div id="sub-reinsertion" class="card sub-pane" style="display:none">
+        <div class="card-title">🎓 Section Réinsertion</div>
+        <div class="form-group"><label class="fl">Titre</label><input class="fi" id="rein_title" placeholder="Réinsertion"></div>
+        <div class="form-group"><label class="fl">Description</label><textarea class="fi" id="rein_text" rows="3"></textarea></div>
+      </div>
+
+      <div id="sub-vision" class="card sub-pane" style="display:none">
+        <div class="card-title">🔭 Vision 2030</div>
+        <div class="form-group"><label class="fl">Description</label><textarea class="fi" id="vision_lead" rows="3"></textarea></div>
+        <div class="form-group"><label class="fl">Objectif 1</label><input class="fi" id="vision_o1"></div>
+        <div class="form-group"><label class="fl">Objectif 2</label><input class="fi" id="vision_o2"></div>
+        <div class="form-group"><label class="fl">Objectif 3</label><input class="fi" id="vision_o3"></div>
+      </div>
+
+      <div id="sub-donate" class="card sub-pane" style="display:none">
+        <div class="card-title">💚 Section Soutenez-nous</div>
+        <div class="form-group"><label class="fl">Titre</label><input class="fi" id="donate_title" placeholder="Soutenez-nous"></div>
+        <div class="form-group"><label class="fl">Description</label><input class="fi" id="donate_lead"></div>
+      </div>
+    </div>
+
+    <!-- Contact -->
+    <div id="tab-contact-info" class="tab-pane">
+      <div class="topbar">
+        <div class="page-title-bar">Informations de contact</div>
+        <button class="save-btn" onclick="saveSection('contact-info')">💾 Enregistrer</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📍 Coordonnées</div>
+        <div class="row2">
+          <div class="form-group"><label class="fl">Adresse</label><input class="fi" id="contact_adresse" placeholder="Ahoué-Abidjan, Côte d'Ivoire"></div>
+          <div class="form-group"><label class="fl">Email</label><input type="email" class="fi" id="contact_email" placeholder="ongbienetre349@gmail.com"></div>
+          <div class="form-group"><label class="fl">Téléphone 1</label><input class="fi" id="contact_tel1" placeholder="+225 0150632626"></div>
+          <div class="form-group"><label class="fl">Téléphone 2</label><input class="fi" id="contact_tel2" placeholder="+225 0769202011"></div>
+          <div class="form-group"><label class="fl">Horaires</label><input class="fi" id="contact_horaires" placeholder="24h/24 — 7j/7"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔗 Réseaux sociaux</div>
+        <div class="row2">
+          <div class="form-group"><label class="fl">URL Facebook</label><input class="fi" id="social_facebook" placeholder="https://facebook.com/ongbienetre"></div>
+          <div class="form-group"><label class="fl">URL TikTok</label><input class="fi" id="social_tiktok" placeholder="https://tiktok.com/@ongbienetre"></div>
+          <div class="form-group"><label class="fl">URL LinkedIn</label><input class="fi" id="social_linkedin" placeholder="https://linkedin.com/company/ongbienetre"></div>
+          <div class="form-group"><label class="fl">WhatsApp (numéro)</label><input class="fi" id="social_whatsapp" placeholder="2250150632626"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Images -->
+    <div id="tab-images" class="tab-pane">
+      <div class="topbar">
+        <div class="page-title-bar">Images</div>
+        <button class="save-btn" onclick="saveSection('images')">💾 Enregistrer</button>
+      </div>
+      <p style="font-size:.85rem;color:var(--muted);margin-bottom:20px">Cliquez sur une image pour la remplacer. Formats acceptés : JPG, PNG, WebP. Max 8 Mo.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px">
+        <div class="card" style="padding:20px">
+          <div class="card-title">🖼️ Héro — Image 1</div>
+          <div class="img-upload-area" onclick="triggerUpload('community1')">
+            <input type="file" id="upload_community1" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(this,'community1','prev_community1')">
+            <div class="up-icon">📷</div>
+            <div class="up-label">community1.jpg</div>
+            <img class="preview" id="prev_community1" alt="Aperçu">
+          </div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="card-title">🖼️ Héro — Image 2</div>
+          <div class="img-upload-area" onclick="triggerUpload('community2')">
+            <input type="file" id="upload_community2" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(this,'community2','prev_community2')">
+            <div class="up-icon">📷</div>
+            <div class="up-label">community2.jpg</div>
+            <img class="preview" id="prev_community2" alt="Aperçu">
+          </div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="card-title">🖼️ À propos — Image principale</div>
+          <div class="img-upload-area" onclick="triggerUpload('about')">
+            <input type="file" id="upload_about" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(this,'about','prev_about')">
+            <div class="up-icon">📷</div>
+            <div class="up-label">about.jpg</div>
+            <img class="preview" id="prev_about" alt="Aperçu">
+          </div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="card-title">🖼️ Vision 2030</div>
+          <div class="img-upload-area" onclick="triggerUpload('vision')">
+            <input type="file" id="upload_vision" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(this,'vision','prev_vision')">
+            <div class="up-icon">📷</div>
+            <div class="up-label">vision.jpg</div>
+            <img class="preview" id="prev_vision" alt="Aperçu">
+          </div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="card-title">🖼️ Galerie — Image 1</div>
+          <div class="img-upload-area" onclick="triggerUpload('gallery1')">
+            <input type="file" id="upload_gallery1" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(this,'gallery1','prev_gallery1')">
+            <div class="up-icon">📷</div>
+            <div class="up-label">gallery1.jpg</div>
+            <img class="preview" id="prev_gallery1" alt="Aperçu">
+          </div>
+        </div>
+        <div class="card" style="padding:20px">
+          <div class="card-title">🖼️ Galerie — Image 2</div>
+          <div class="img-upload-area" onclick="triggerUpload('gallery2')">
+            <input type="file" id="upload_gallery2" accept="image/jpeg,image/png,image/webp" onchange="handleImageUpload(this,'gallery2','prev_gallery2')">
+            <div class="up-icon">📷</div>
+            <div class="up-label">gallery2.jpg</div>
+            <img class="preview" id="prev_gallery2" alt="Aperçu">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticker -->
+    <div id="tab-ticker" class="tab-pane">
+      <div class="topbar">
+        <div class="page-title-bar">Ruban d'annonces</div>
+        <button class="save-btn" onclick="saveSection('ticker')">💾 Enregistrer</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📢 Messages du ruban <span class="badge">Défilement automatique</span></div>
+        <p style="font-size:.85rem;color:var(--muted);margin-bottom:16px">Ces messages s'affichent dans le bandeau orange en bas du site. Glissez pour réordonner.</p>
+        <div id="tickerList"></div>
+        <button class="add-ticker" onclick="addTickerItem()">+ Ajouter un message</button>
+      </div>
+    </div>
+
+    <!-- Blog -->
+    <div id="tab-blog" class="tab-pane">
+      <div class="topbar">
+        <div class="page-title-bar">Blog / Actualités</div>
+        <button class="save-btn" onclick="saveSection('blog')">💾 Enregistrer</button>
+      </div>
+      <div id="blogList"></div>
+      <button class="add-ticker" style="margin-top:4px" onclick="addBlogPost()">+ Ajouter un article</button>
+    </div>
+
+    <!-- Témoignages -->
+    <div id="tab-temoignages" class="tab-pane">
+      <div class="topbar">
+        <div class="page-title-bar">Témoignages</div>
+        <button class="save-btn" onclick="saveSection('temoignages')">💾 Enregistrer</button>
+      </div>
+      <div id="testiList"></div>
+      <button class="add-ticker" style="margin-top:4px" onclick="addTesti()">+ Ajouter un témoignage</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = ''; // même domaine
+let TOKEN = '';
+let CONTENT = {};
+
+// ── LOGIN ──────────────────────────────────────────────────────────────────
+async function doLogin() {
+  const pass = document.getElementById('adminPassword').value.trim();
+  if (!pass) return;
+  TOKEN = pass;
+  try {
+    const r = await fetch(`${API}/api/admin/content`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+    if (r.status === 401) { showLoginErr(); return; }
+    CONTENT = await r.json();
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadAllContent();
+  } catch { showLoginErr(); }
+}
+function showLoginErr() {
+  const err = document.getElementById('loginErr');
+  err.style.display = 'block';
+  setTimeout(() => err.style.display = 'none', 3000);
+}
+function doLogout() {
+  TOKEN = '';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('adminPassword').value = '';
+}
+document.getElementById('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+
+// ── NAVIGATION ─────────────────────────────────────────────────────────────
+function showTab(name) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+function showSubTab(btn, name) {
+  btn.closest('.tab-pane').querySelectorAll('.sub-pane').forEach(p => p.style.display = 'none');
+  document.getElementById(`sub-${name}`).style.display = 'block';
+  btn.closest('.tab-bar').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── CHARGER LE CONTENU ─────────────────────────────────────────────────────
+function loadAllContent() {
+  const c = CONTENT;
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+
+  // Héro
+  set('hero_title', c.hero_title);
+  set('hero_subtitle', c.hero_subtitle);
+  set('hero_badge', c.hero_badge);
+  set('hero_stat1_num', c.hero_stat1_num);
+  set('hero_stat1_label', c.hero_stat1_label);
+  set('hero_stat2_num', c.hero_stat2_num);
+  set('hero_stat2_label', c.hero_stat2_label);
+  // À propos
+  set('about_title', c.about_title);
+  set('about_lead', c.about_lead);
+  set('about_m1_desc', c.about_m1_desc);
+  set('about_m2_desc', c.about_m2_desc);
+  set('about_m3_desc', c.about_m3_desc);
+  // Actions
+  set('actions_title', c.actions_title);
+  set('actions_lead', c.actions_lead);
+  ['a1','a2','a3','a4'].forEach(a => { set(`${a}_title`, c[`${a}_title`]); set(`${a}_text`, c[`${a}_text`]); });
+  // Réinsertion
+  set('rein_title', c.rein_title);
+  set('rein_text', c.rein_text);
+  // Vision
+  set('vision_lead', c.vision_lead);
+  set('vision_o1', c.vision_o1);
+  set('vision_o2', c.vision_o2);
+  set('vision_o3', c.vision_o3);
+  // Donate
+  set('donate_title', c.donate_title);
+  set('donate_lead', c.donate_lead);
+  // Contact
+  set('contact_adresse', c.contact_adresse);
+  set('contact_email', c.contact_email);
+  set('contact_tel1', c.contact_tel1);
+  set('contact_tel2', c.contact_tel2);
+  set('contact_horaires', c.contact_horaires);
+  set('social_facebook', c.social_facebook);
+  set('social_tiktok', c.social_tiktok);
+  set('social_linkedin', c.social_linkedin);
+  set('social_whatsapp', c.social_whatsapp);
+  // Ticker
+  renderTickerList(c.ticker_messages || ['📢 Campagne de dons en cours — Faites un don !', '🗓️ Recrutement de 400 jeunes pour la réinsertion']);
+  // Blog
+  renderBlogList(c.blog_posts || []);
+  // Témoignages
+  renderTestiList(c.testimonials || []);
+  // Stats dashboard
+  document.getElementById('statTicker').textContent = (c.ticker_messages || []).length;
+  document.getElementById('statBlog').textContent = (c.blog_posts || []).length;
+  document.getElementById('statImages').textContent = Object.keys(c).filter(k => k.startsWith('img_')).length;
+}
+
+// ── SAUVEGARDER ───────────────────────────────────────────────────────────
+async function saveSection(section) {
+  const get = id => { const el = document.getElementById(id); return el ? el.value : null; };
+  let payload = {};
+
+  if (section === 'textes') {
+    payload = {
+      hero_title: get('hero_title'), hero_subtitle: get('hero_subtitle'), hero_badge: get('hero_badge'),
+      hero_stat1_num: get('hero_stat1_num'), hero_stat1_label: get('hero_stat1_label'),
+      hero_stat2_num: get('hero_stat2_num'), hero_stat2_label: get('hero_stat2_label'),
+      about_title: get('about_title'), about_lead: get('about_lead'),
+      about_m1_desc: get('about_m1_desc'), about_m2_desc: get('about_m2_desc'), about_m3_desc: get('about_m3_desc'),
+      actions_title: get('actions_title'), actions_lead: get('actions_lead'),
+      a1_title: get('a1_title'), a1_text: get('a1_text'),
+      a2_title: get('a2_title'), a2_text: get('a2_text'),
+      a3_title: get('a3_title'), a3_text: get('a3_text'),
+      a4_title: get('a4_title'), a4_text: get('a4_text'),
+      rein_title: get('rein_title'), rein_text: get('rein_text'),
+      vision_lead: get('vision_lead'), vision_o1: get('vision_o1'), vision_o2: get('vision_o2'), vision_o3: get('vision_o3'),
+      donate_title: get('donate_title'), donate_lead: get('donate_lead'),
+    };
+  } else if (section === 'contact-info') {
+    payload = {
+      contact_adresse: get('contact_adresse'), contact_email: get('contact_email'),
+      contact_tel1: get('contact_tel1'), contact_tel2: get('contact_tel2'), contact_horaires: get('contact_horaires'),
+      social_facebook: get('social_facebook'), social_tiktok: get('social_tiktok'),
+      social_linkedin: get('social_linkedin'), social_whatsapp: get('social_whatsapp'),
+    };
+  } else if (section === 'ticker') {
+    payload = { ticker_messages: getTickerMessages() };
+  } else if (section === 'blog') {
+    payload = { blog_posts: getBlogPosts() };
+  } else if (section === 'temoignages') {
+    payload = { testimonials: getTestimonials() };
+  }
+
+  await postSave(payload);
+}
+
+async function postSave(payload) {
+  try {
+    const r = await fetch(`${API}/api/admin/content`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${TOKEN}` },
+      body: JSON.stringify(payload),
+    });
+    const d = await r.json();
+    if (d.success) { CONTENT = { ...CONTENT, ...payload }; showToast('✅ Sauvegardé avec succès !', 'success'); }
+    else showToast('❌ Erreur : ' + d.message, 'error');
+  } catch { showToast('❌ Erreur réseau.', 'error'); }
+}
+
+// ── TICKER ────────────────────────────────────────────────────────────────
+function renderTickerList(messages) {
+  const list = document.getElementById('tickerList');
+  list.innerHTML = '';
+  messages.forEach((msg, i) => {
+    const div = document.createElement('div');
+    div.className = 'ticker-item';
+    div.innerHTML = `<span style="color:var(--muted);font-size:.85rem;min-width:24px">${i+1}.</span>
+      <input value="${msg.replace(/"/g,'&quot;')}" placeholder="Message...">
+      <button class="ticker-del" onclick="this.parentElement.remove(); updateTickerCount()">🗑</button>`;
+    list.appendChild(div);
+  });
+  updateTickerCount();
+}
+function addTickerItem() {
+  const div = document.createElement('div');
+  div.className = 'ticker-item';
+  const num = document.querySelectorAll('#tickerList .ticker-item').length + 1;
+  div.innerHTML = `<span style="color:var(--muted);font-size:.85rem;min-width:24px">${num}.</span>
+    <input placeholder="Nouveau message..." autofocus>
+    <button class="ticker-del" onclick="this.parentElement.remove(); updateTickerCount()">🗑</button>`;
+  document.getElementById('tickerList').appendChild(div);
+  div.querySelector('input').focus();
+}
+function getTickerMessages() {
+  return [...document.querySelectorAll('#tickerList .ticker-item input')].map(i => i.value).filter(v => v.trim());
+}
+function updateTickerCount() {
+  document.getElementById('statTicker').textContent = document.querySelectorAll('#tickerList .ticker-item').length;
+}
+
+// ── BLOG ──────────────────────────────────────────────────────────────────
+function renderBlogList(posts) {
+  const list = document.getElementById('blogList');
+  list.innerHTML = '';
+  posts.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '16px';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="card-title" style="margin:0;border:none;padding:0">📄 Article ${i+1}</div>
+        <button class="ticker-del" style="font-size:.85rem" onclick="this.closest('.card').remove()">🗑 Supprimer</button>
+      </div>
+      <div class="row2">
+        <div class="form-group"><label class="fl">Titre</label><input class="fi blog-title" value="${(p.title||'').replace(/"/g,'&quot;')}"></div>
+        <div class="form-group"><label class="fl">Catégorie</label><input class="fi blog-cat" value="${(p.category||'').replace(/"/g,'&quot;')}" placeholder="Ex: Santé, Formation..."></div>
+      </div>
+      <div class="form-group"><label class="fl">Extrait / Résumé</label><textarea class="fi blog-excerpt" rows="2">${p.excerpt||''}</textarea></div>
+      <div class="form-group"><label class="fl">Image (nom du fichier dans /images/)</label><input class="fi blog-img" value="${(p.image||'').replace(/"/g,'&quot;')}" placeholder="blog1.jpg"></div>`;
+    list.appendChild(card);
+  });
+  document.getElementById('statBlog').textContent = posts.length;
+}
+function addBlogPost() {
+  const posts = getBlogPosts();
+  posts.push({ title: '', category: '', excerpt: '', image: '' });
+  renderBlogList(posts);
+}
+function getBlogPosts() {
+  return [...document.querySelectorAll('#blogList .card')].map(c => ({
+    title:    c.querySelector('.blog-title')?.value || '',
+    category: c.querySelector('.blog-cat')?.value || '',
+    excerpt:  c.querySelector('.blog-excerpt')?.value || '',
+    image:    c.querySelector('.blog-img')?.value || '',
+  }));
+}
+
+// ── TÉMOIGNAGES ───────────────────────────────────────────────────────────
+function renderTestiList(list) {
+  const container = document.getElementById('testiList');
+  container.innerHTML = '';
+  list.forEach((t, i) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.marginBottom = '16px';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="card-title" style="margin:0;border:none;padding:0">💬 Témoignage ${i+1}</div>
+        <button class="ticker-del" style="font-size:.85rem" onclick="this.closest('.card').remove()">🗑 Supprimer</button>
+      </div>
+      <div class="row2">
+        <div class="form-group"><label class="fl">Nom</label><input class="fi testi-name" value="${(t.name||'').replace(/"/g,'&quot;')}"></div>
+        <div class="form-group"><label class="fl">Rôle / Localisation</label><input class="fi testi-role" value="${(t.role||'').replace(/"/g,'&quot;')}" placeholder="Bénéficiaire — Ahoué"></div>
+      </div>
+      <div class="form-group"><label class="fl">Témoignage</label><textarea class="fi testi-text" rows="3">${t.text||''}</textarea></div>
+      <div class="form-group"><label class="fl">Image (initiales si pas de photo)</label><input class="fi testi-img" value="${(t.image||'').replace(/"/g,'&quot;')}" placeholder="person1.jpg ou laisser vide pour initiales"></div>`;
+    container.appendChild(card);
+  });
+}
+function addTesti() {
+  const list = getTestimonials();
+  list.push({ name:'', role:'', text:'', image:'' });
+  renderTestiList(list);
+}
+function getTestimonials() {
+  return [...document.querySelectorAll('#testiList .card')].map(c => ({
+    name:  c.querySelector('.testi-name')?.value || '',
+    role:  c.querySelector('.testi-role')?.value || '',
+    text:  c.querySelector('.testi-text')?.value || '',
+    image: c.querySelector('.testi-img')?.value || '',
+  }));
+}
+
+// ── IMAGES ────────────────────────────────────────────────────────────────
+function triggerUpload(name) {
+  document.getElementById(`upload_${name}`).click();
+}
+async function handleImageUpload(input, filename, previewId) {
+  const file = input.files[0];
+  if (!file) return;
+  const formData = new FormData();
+  formData.append('image', file, filename + file.name.slice(file.name.lastIndexOf('.')));
+  try {
+    const r = await fetch(`${API}/api/admin/upload`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${TOKEN}` },
+      body: formData,
+    });
+    const d = await r.json();
+    if (d.success) {
+      const prev = document.getElementById(previewId);
+      if (prev) { prev.src = d.path + '?' + Date.now(); prev.style.display = 'block'; }
+      await postSave({ [`img_${filename}`]: d.path });
+      showToast(`✅ Image "${filename}" mise à jour !`, 'success');
+    } else showToast('❌ ' + d.message, 'error');
+  } catch { showToast('❌ Erreur upload.', 'error'); }
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast ${type} show`;
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
