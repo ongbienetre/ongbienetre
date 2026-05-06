@@ -415,35 +415,101 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const API = ''; // même domaine
+const API = 'https://api.ongbien-etre.org'; // ← URL de ton serveur backend
 let TOKEN = '';
 let CONTENT = {};
 
 // ── LOGIN ──────────────────────────────────────────────────────────────────
+// Le login ne dépend plus d'un appel réseau.
+// Le mot de passe est stocké dans le navigateur (sessionStorage) et utilisé
+// comme Bearer token pour les appels API. Si l'API répond 401, on déconnecte.
 async function doLogin() {
   const pass = document.getElementById('adminPassword').value.trim();
-  if (!pass) return;
-  TOKEN = pass;
+  if (!pass) { showLoginErr('Veuillez entrer un mot de passe.'); return; }
+
+  const btn = document.querySelector('.login-btn');
+  btn.textContent = 'Vérification...';
+  btn.disabled = true;
+
   try {
-    const r = await fetch(`${API}/api/admin/content`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
-    if (r.status === 401) { showLoginErr(); return; }
-    CONTENT = await r.json();
+    // 1. Vérifier le mot de passe via la route dédiée
+    const loginRes = await fetch(`${API}/api/admin/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pass })
+    });
+
+    if (loginRes.status === 401) {
+      showLoginErr('Mot de passe incorrect.');
+      btn.textContent = 'Connexion'; btn.disabled = false;
+      return;
+    }
+
+    if (!loginRes.ok) {
+      showLoginErr('Erreur serveur (' + loginRes.status + '). Réessayez.');
+      btn.textContent = 'Connexion'; btn.disabled = false;
+      return;
+    }
+
+    // 2. Mot de passe correct → charger le contenu
+    TOKEN = pass;
+    sessionStorage.setItem('ong_admin_token', TOKEN);
+
+    try {
+      const contentRes = await fetch(`${API}/api/admin/content`, {
+        headers: { 'Authorization': `Bearer ${TOKEN}` }
+      });
+      CONTENT = contentRes.ok ? await contentRes.json() : {};
+    } catch { CONTENT = {}; }
+
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     loadAllContent();
-  } catch { showLoginErr(); }
+
+  } catch (networkErr) {
+    // Réseau totalement inaccessible
+    showLoginErr('⚠️ Serveur inaccessible. Vérifiez votre connexion ou l\'URL du serveur.');
+    console.error('Réseau :', networkErr.message);
+  }
+
+  btn.textContent = 'Connexion'; btn.disabled = false;
 }
-function showLoginErr() {
+
+function showLoginErr(msg) {
   const err = document.getElementById('loginErr');
+  err.textContent = msg || 'Mot de passe incorrect.';
   err.style.display = 'block';
-  setTimeout(() => err.style.display = 'none', 3000);
+  setTimeout(() => err.style.display = 'none', 4000);
 }
 function doLogout() {
   TOKEN = '';
+  CONTENT = {};
+  sessionStorage.removeItem('ong_admin_token');
   document.getElementById('loginScreen').style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   document.getElementById('adminPassword').value = '';
 }
+
+// Restaurer la session si le token existe déjà dans sessionStorage
+(async function restoreSession() {
+  const saved = sessionStorage.getItem('ong_admin_token');
+  if (!saved) return;
+  TOKEN = saved;
+  try {
+    const r = await fetch(`${API}/api/admin/content`, { headers: { 'Authorization': `Bearer ${TOKEN}` } });
+    if (r.status === 401) { sessionStorage.removeItem('ong_admin_token'); return; }
+    CONTENT = r.ok ? await r.json() : {};
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadAllContent();
+  } catch {
+    // Si pas de réseau, on entre quand même avec le token sauvegardé
+    CONTENT = {};
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    loadAllContent();
+  }
+})();
 document.getElementById('adminPassword').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
 
 // ── NAVIGATION ─────────────────────────────────────────────────────────────

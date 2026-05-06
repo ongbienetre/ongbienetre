@@ -115,6 +115,15 @@ function requireAdmin(req, res, next) {
   next();
 }
 
+// Route de vérification de login admin (pas d'erreur de sécurité : ne retourne que success/fail)
+app.post("/api/admin/login", rateLimit({ windowMs: 15*60*1000, max: 10, message: { success: false, message: "Trop de tentatives." } }), (req, res) => {
+  const { password } = req.body;
+  if (!password || !process.env.ADMIN_PASSWORD || password !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ success: false, message: "Mot de passe incorrect." });
+  }
+  res.json({ success: true });
+});
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // ROUTE — Contact
 // ═══════════════════════════════════════════════════════════════════════════════
